@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+ 	<head>
+	    <meta charset="{{ CHARSET }}">
+	    <title>{% block title %}{% endblock %}</title>
+    	{% block style %}{% include "style.html" %}{% endblock %}
+	</head>
+	<body>
+		{% block header %}{% include "header.html" %}{% endblock %}
+	    {% block content %} {% endblock %}
+	    {% block footer %}{% include "footer.html" %}{% endblock %}
+	</body>
+</html>
