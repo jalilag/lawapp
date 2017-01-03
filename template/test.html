@@ -1,0 +1,11 @@
+{% extends "skelette.html" %}
+
+{% if envoi %}Votre message a bien été envoyé{% endif %}
+
+{% block content %}
+<form action="{% url 'blog/info' %}" method="post">
+	{% csrf_token %}
+	{{ content.as_p }}
+	<input type="submit" value="Submit" />
+</form> 
+{% endblock %}

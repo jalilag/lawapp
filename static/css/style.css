@@ -1,3 +1,20 @@
 body {
 	background-color: #ccc;
+	margin: 0;
 }
+
+header, footer {
+	background-color: #000;
+	font-weight: bold;
+	color:#fff;
+	padding: 1em;
+}
+form {
+	padding:1em;
+}
+form table {
+	border: 1px solid #000;
+	border-radius: 1em;
+	padding:0.5em;
+}
+

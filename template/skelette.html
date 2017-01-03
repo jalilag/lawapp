@@ -2,12 +2,12 @@
 <html lang="{{ LANG_CODE }}">
  	<head>
 	    <meta charset="{{ CHARSET }}">
-	    <title>{% block title %}{% endblock %}</title>
+	    <title>{% block title %}TITRE{% endblock %}</title>
     	{% block style %}{% include "style.html" %}{% endblock %}
 	</head>
 	<body>
 		{% block header %}{% include "header.html" %}{% endblock %}
-	    {% block content %} {% endblock %}
+	    {% block content %} Il n'ya rien {% endblock %}
 	    {% block footer %}{% include "footer.html" %}{% endblock %}
 	</body>
 </html>
