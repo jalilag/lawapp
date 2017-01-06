@@ -3,11 +3,12 @@
  	<head>
 	    <meta charset="{{ CHARSET }}">
 	    <title>{% block title %}TITRE{% endblock %}</title>
-    	{% block style %}{% include "style.html" %}{% endblock %}
+    	{% include "style.html" %}
 	</head>
 	<body>
-		{% block header %}{% include "header.html" %}{% endblock %}
+		{% include "header.html" %}
 	    {% block content %} Il n'ya rien {% endblock %}
-	    {% block footer %}{% include "footer.html" %}{% endblock %}
+	    {% include "footer.html" %}
+	    {% include "js.html" %}
 	</body>
 </html>

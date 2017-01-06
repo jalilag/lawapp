@@ -4,5 +4,4 @@ from . import views
 
 urlpatterns = [
     url(r'^info$',views.member_create,name="create"),
-    url(r'^test$',views.test),
 ]

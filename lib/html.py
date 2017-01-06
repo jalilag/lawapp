@@ -25,6 +25,14 @@ class libHtml:
 			s = '<h1>' + titre + '</h1>'
 		return s
 
+	def div(self, content, classe=None, idtxt = None):
+		s = '<div '
+		if idtxt is not None:
+			s += 'id="' + idtxt +'"'
+		if classe is not None:
+			s += 'class="' + classe + '"'
+		s +='>' + content + '</div>'
+		return s
 
 	def liste(self,reslist):
 		"""
