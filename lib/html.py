@@ -90,5 +90,18 @@ class libHtml:
 		content += '</form>'
 		return content
 
+	def form_set_all(self,request,action,form_content,form,title):
+		"""
+			Mise en forme complete d'un formulaire
+		"""
+		content = self.div(self.form_cadre(request,action,form_content), "col-lg-8")
+		if form is not None:
+			if form.errors.__str__() != "":
+				content += self.div(form.errors.__str__(),"col-lg-4")
+		content = self.div(content,"row")
+		content = self.div(self.div(self.titre(title),"col-lg-12"),"row") + content  
+		content = self.div(content, "container")
+		return content
+
 	def submit_button(self,titre="Submit"):
 		return '<input type="submit" value="' + titre + '" />'
