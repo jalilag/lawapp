@@ -78,23 +78,26 @@ class libHtml:
 		res += '</table>'
 		return res
 
-	def form_cadre(self,request,action,form_content):
+	def form_cadre(self,request,action,form_content,fileupload = False):
 		"""
 			Permet d'encadre un formulaire avec les informations nécéssaire pour la transmission des infos
 			Possibilité d'ajouté un bouton envoyer
 			form_content est un bloc html contenant les champs du formumlaire
 		"""
-		content = '<form action="' + reverse(action) + '" ' + 'method="post">'
+		content = '<form action="' + reverse(action) + '" ' + 'method="post"'
+		if fileupload:
+			content += ' enctype="multipart/form-data"'
+		content += '>'
 		content += '<input type="hidden" name="csrfmiddlewaretoken" value="' + csrf.get_token(request) + '">'
 		content += form_content
 		content += '</form>'
 		return content
 
-	def form_set_all(self,request,action,form_content,form,title):
+	def form_set_all(self,request,action,form_content,form,title,fileupload=False):
 		"""
 			Mise en forme complete d'un formulaire
 		"""
-		content = self.div(self.form_cadre(request,action,form_content), "col-lg-8")
+		content = self.div(self.form_cadre(request,action,form_content,fileupload), "col-lg-8")
 		if form is not None:
 			if form.errors.__str__() != "":
 				content += self.div(form.errors.__str__(),"col-lg-4")
@@ -105,3 +108,11 @@ class libHtml:
 
 	def submit_button(self,titre="Submit"):
 		return '<input type="submit" value="' + titre + '" />'
+
+	def photo_display(self,img_path,img_title=None,width="100",height="100"):
+		if img_title is None:
+			img_title = img_path
+		l = '<img src="' + img_path + '" '
+		l+= 'alt="' + img_title + '" '
+		l+= 'style="width:' + width + 'px;height:' + height + 'px;">'
+		return l

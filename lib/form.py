@@ -21,7 +21,7 @@ def lib_get_field_from_form(formulaire,list_type='list'):
 		for field in formulaire:
 			lab = '<label for="id_' + field.label.lower() + '">' + field.label + ':</label>'
 			l1 = {'label':lab,'field':str(field)}
-			l[field.label.lower()] = l1
+			l[field.name.lower()] = l1
 		if formulaire.errors.__str__() != "":
 			l["errors"] = formulaire.errors.__str__()
 	return l
