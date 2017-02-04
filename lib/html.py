@@ -48,7 +48,7 @@ class libHtml:
 		s = '<a href="' + adresse + '">' + titre + '</a>'
 		return s
 
-	def tableau(self,reslist,table_class = None):
+	def tableau(self,reslist,table_class = None,head=True):
 		"""
 			Génére un élément table à partir d'une liste
 			La liste s'écrit : 
@@ -57,11 +57,14 @@ class libHtml:
 				[[lab,class,lspan,colspan],[lab,class,lspan,colspan],[lab,class,lspan,colspan]],
 			]
 		"""
+		ct = 1
 		res = '<table '
 		if table_class is not None:
 			res += 'class="' + table_class + '"'
 		res += '>'
 		for i in reslist:
+			if ct == 1 and head:
+				res += '<thead>'
 			res += '<tr>'
 			for c in i:
 				res += '<td ' 
@@ -75,6 +78,9 @@ class libHtml:
 					res += c[0]
 				res += '</td>' 
 			res +='</tr>'
+			if ct == 1 and head:
+				res += '</thead>'
+				ct += 1
 		res += '</table>'
 		return res
 

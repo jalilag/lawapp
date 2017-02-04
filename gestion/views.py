@@ -85,7 +85,7 @@ def member_list(request):
 	# 		print(field.__dict__['verbose_name'])
 	print(Member._meta.get_field('lastname').verbose_name)
 
-	l= build_list(Member.objects.all(),fields,10)
+	l= build_list(Member,fields,0)
 	l2 = libHtml()
 	content = l2.tableau(l)
 	return render(request, 'gestion/template/form.html', locals())
