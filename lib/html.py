@@ -75,7 +75,7 @@ class libHtml:
 					res += 'rowspan="' + c[2] + '" colspan="' + c[3] + '" '
 				res += '>'
 				if c[0] != "0":
-					res += c[0]
+					res += str(c[0])
 				res += '</td>' 
 			res +='</tr>'
 			if ct == 1 and head:

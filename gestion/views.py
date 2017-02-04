@@ -77,15 +77,8 @@ def team_create(request):
 	return render(request, 'gestion/template/form.html', locals())
 
 def member_list(request):
-	fields = ['firstname','lastname','job','photo']
-
-
-	# for field in Member._meta.__dict__['_field_name_cache']:
-	# 	if field.__dict__['name'] == 'lastname':
-	# 		print(field.__dict__['verbose_name'])
-	print(Member._meta.get_field('lastname').verbose_name)
-
-	l= build_list(Member,fields,0)
+	fields = ['id','firstname','lastname','job','photo']
+	l= build_list(Member,fields,11,3,'-id')
 	l2 = libHtml()
 	content = l2.tableau(l)
 	return render(request, 'gestion/template/form.html', locals())
