@@ -1,5 +1,4 @@
 from django.middleware import csrf
-from django.urls import reverse
 
 class libHtml:
 	"""
@@ -33,6 +32,16 @@ class libHtml:
 			s += 'class="' + classe + '"'
 		s +='>' + content + '</div>'
 		return s
+
+	def container(self, content, cont_type='div',classe=None, idtxt = None):
+		s = '<' + cont_type + ' '
+		if idtxt is not None:
+			s += 'id="' + idtxt +'"'
+		if classe is not None:
+			s += 'class="' + classe + '"'
+		s +='>' + content + '</' + cont_type + '>'
+		return s
+
 
 	def liste(self,reslist):
 		"""
@@ -122,3 +131,4 @@ class libHtml:
 		l+= 'alt="' + img_title + '" '
 		l+= 'style="width:' + width + 'px;height:' + height + 'px;">'
 		return l
+

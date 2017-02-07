@@ -3,7 +3,7 @@ from django.views.generic import ListView
 from .forms import form_member_create, form_job_create, form_team_create
 from lib.form import lib_get_field_from_form
 from lib.html import libHtml
-from lib.list import build_list
+from lib.list import build_list_html
 from .models import Member
 
 def member_create(request):
@@ -81,15 +81,7 @@ def member_list(request, bloc='1', orderby='id'):
 		bloc = '1'
 	if orderby is None:
 		orderby = 'id'
+	resperpage = 10
 	fields = ['id','firstname','lastname','job','photo']
-	N = int(Member.objects.count()/10)+1
-	l= build_list(Member,fields,10,int(bloc),orderby)
-	l2 = libHtml()
-	content = ''
-	for i in fields:
-		content += l2.lien(i,reverse('member_list',args=['1',i]))
-	content += l2.tableau(l)
-	print(N)
-	for i in range(1,N+1):
-		content += l2.lien(str(i),reverse('member_list',args=[str(i),orderby]))
+	content = build_list_html(Member,fields,'member_list',resperpage,int(bloc),orderby)
 	return render(request, 'gestion/template/form.html', locals())
