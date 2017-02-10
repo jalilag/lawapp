@@ -1,4 +1,6 @@
-
+"""
+	Librairie gérant la génération de formulaire
+"""
 
 def lib_get_field_from_form(formulaire,list_type='list'):
 	"""

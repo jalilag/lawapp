@@ -7,7 +7,8 @@ urlpatterns = [
     url(r'^job_create$',views.job_create, name='job_create'),
     url(r'^team_create$',views.team_create, name='team_create'),
     url(r'''^member_list(?:\/(?P<bloc>[^/]+))?'''
-    	r'''(?:\/(?P<orderby>[^/]+))?'''
+    				r'''(?:\/(?P<orderby>[^/]+))?'''
+    				r'''(?:\/(?P<resperpage>[^/]+))?'''
     	,views.member_list, name='member_list'),
 ]
 

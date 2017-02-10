@@ -7,6 +7,7 @@ class Team(m.Model):
 		Classe listant les différentes équipes du cabinet
 	"""
 	title = m.CharField(max_length=50, verbose_name="Nom de l'équipe")
+	
 	def __str__(self):
 		return self.title
 
@@ -37,10 +38,18 @@ class Member(m.Model):
 	def __getattr__(self,nom):
 		if nom == 'job':
 			l = str(self.job.title)
+		if nom == 'team':
+			N = len(self.team.all())
+			l = "no team"
+			if N > 0:
+				l = ""
+				for i in range(0,N):
+					l+= str(self.team.all()[i])
+					if i < N-1:
+						l+= ', '
 		else:
 			l = super(Member,self).__getattribute__(nom)		
 		return l
-
 
 
 class Job(m.Model):

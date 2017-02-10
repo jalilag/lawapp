@@ -1,3 +1,6 @@
+"""
+	Librairie permettant de jouer avec la génération des urls
+"""
 from django.core.urlresolvers import get_resolver
 
 def lib_get_all_urls():

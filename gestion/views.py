@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect,reverse
+from django.shortcuts import render,redirect,reverse,get_object_or_404
 from django.views.generic import ListView
 from .forms import form_member_create, form_job_create, form_team_create
 from lib.form import lib_get_field_from_form
@@ -45,9 +45,7 @@ def job_create(request):
 	[[l["title"]["label"]],[l["title"]["field"]]],
 	[[l2.submit_button("Envoyé")]],
 	]
-
 	content = l2.form_set_all(request,"job_create",l2.tableau(l1),form,"eaeaz")	
-
 	if form.is_valid():
 		form.save()
 		# Génération de la page en cas de réussite
@@ -76,12 +74,23 @@ def team_create(request):
 		
 	return render(request, 'gestion/template/form.html', locals())
 
-def member_list(request, bloc='1', orderby='id'):
+def member_list(request, bloc='1', orderby='id', resperpage='10'):
 	if bloc is None:
-		bloc = '1'
+		bloc = 1
 	if orderby is None:
 		orderby = 'id'
-	resperpage = 10
-	fields = ['id','firstname','lastname','job','photo']
-	content = build_list_html(Member,fields,'member_list',resperpage,int(bloc),orderby)
+	if resperpage is None:
+		resperpage = 10
+	if len(request.POST) > 0:
+		l = dict(request.POST)
+		for i in l['delete']:
+			o = get_object_or_404(Member, pk=int(i))
+			o.delete()
+		redirect('member_list')
+	fields = ['id','firstname','lastname','job','team','photo','delete']
+	content = build_list_html(Member,fields,'member_list',int(resperpage),int(bloc),orderby)
+	if 'delete' in fields:
+		l2 = libHtml()
+		content = l2.form_cadre(request,'member_list',content)
 	return render(request, 'gestion/template/form.html', locals())
+

@@ -14,6 +14,10 @@ class form_member_create(f.ModelForm):
 	    for dat in Member.objects.all():
 	    	if dat.firstname == firstname and dat.lastname == lastname:
 	    		raise f.ValidationError("Ce membre existe déja", code="err1")
+	    return cleaned_data
+
+class member_delete(f.ModelForm):
+	id = f.CheckboxInput()
 
 
 class form_job_create(f.ModelForm):

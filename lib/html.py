@@ -1,5 +1,8 @@
+"""
+	Librairie permettant le formatage html
+"""
 from django.middleware import csrf
-
+from django.shortcuts import reverse
 class libHtml:
 	"""
 		Classe permettant de générer facilement du code HTML
@@ -132,3 +135,20 @@ class libHtml:
 		l+= 'style="width:' + width + 'px;height:' + height + 'px;">'
 		return l
 
+	def button(self,title=None,address="#",classname="default"):
+		s = '<a '
+		s += 'class="' + 'btn btn-' + classname + '" '
+		s += 'href="' + address + '" '
+		s += 'role="button"'
+		s+= '>'
+		if title is not None:
+			s += title 
+		s += '</a>'
+		return s
+
+	def checkbox(self,name,val):
+		s = '<input type="checkbox" '
+		s += 'name="' + name + '" ' 
+		s += 'value="' + str(val) + '" '
+		s += '/>'
+		return s
