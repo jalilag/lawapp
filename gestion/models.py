@@ -1,6 +1,6 @@
 from django.db import models as m
 import os
-from lawapp.settings import MEDIA_URL
+from lawapp.settings import MEDIA_URL, MEDIA_ROOT
 
 class Team(m.Model):
 	"""
@@ -50,6 +50,14 @@ class Member(m.Model):
 		else:
 			l = super(Member,self).__getattribute__(nom)		
 		return l
+
+	def delete(self):
+		l = os.listdir(MEDIA_ROOT + "/member/photos")
+		for i in l:
+			filename = os.path.splitext(i)[0]
+			if filename == str(self.pk):
+				os.remove(MEDIA_ROOT + "/member/photos/" + i)
+		super(Member, self).delete()
 
 
 class Job(m.Model):

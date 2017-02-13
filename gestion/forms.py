@@ -16,7 +16,7 @@ class form_member_create(f.ModelForm):
 	    		raise f.ValidationError("Ce membre existe déja", code="err1")
 	    return cleaned_data
 
-class member_delete(f.ModelForm):
+class form_list_delete(f.ModelForm):
 	id = f.CheckboxInput()
 
 

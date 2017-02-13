@@ -65,8 +65,8 @@ class libHtml:
 			Génére un élément table à partir d'une liste
 			La liste s'écrit : 
 			[
-				[[lab,class,lspan,colspan],[lab,class,lspan,colspan],[lab,class,lspan,colspan]],
-				[[lab,class,lspan,colspan],[lab,class,lspan,colspan],[lab,class,lspan,colspan]],
+				[[lab,params],[lab,params],[lab,params]],
+				[[lab,params],[lab,params],[lab,params]],
 			]
 		"""
 		ct = 1
@@ -82,9 +82,7 @@ class libHtml:
 				res += '<td ' 
 				if len(c) > 1:
 					if c[1] != "0":
-						res += 'class="' + c[1] + '"'
-				if len(c) > 3:
-					res += 'rowspan="' + c[2] + '" colspan="' + c[3] + '" '
+						res += c[1] 
 				res += '>'
 				if c[0] != "0":
 					res += str(c[0])
@@ -145,6 +143,7 @@ class libHtml:
 			s += title 
 		s += '</a>'
 		return s
+
 
 	def checkbox(self,name,val):
 		s = '<input type="checkbox" '

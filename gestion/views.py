@@ -28,9 +28,8 @@ def member_create(request):
 
 	if form.is_valid():
 		form.save()
+		return redirect('member_list')		
 		# Génération de la page en cas de réussite
-		content = 'Votre message est envoyé.'
-		
 	return render(request, 'gestion/template/form.html', locals())
 
 
@@ -75,20 +74,24 @@ def team_create(request):
 	return render(request, 'gestion/template/form.html', locals())
 
 def member_list(request, bloc='1', orderby='id', resperpage='10'):
+	# Gestion des args
 	if bloc is None:
 		bloc = 1
 	if orderby is None:
 		orderby = 'id'
 	if resperpage is None:
 		resperpage = 10
-	if len(request.POST) > 0:
+	# En cas de suppression
+	if len(request.POST) > 0 and 'delete' in request.POST:
 		l = dict(request.POST)
 		for i in l['delete']:
 			o = get_object_or_404(Member, pk=int(i))
 			o.delete()
 		redirect('member_list')
+	# Fields à afficher
 	fields = ['id','firstname','lastname','job','team','photo','delete']
-	content = build_list_html(Member,fields,'member_list',int(resperpage),int(bloc),orderby)
+	# Génération de la liste
+	content = build_list_html(Member,fields,'member_list',int(resperpage),int(bloc),orderby,"fsdfsd",'member_list')
 	if 'delete' in fields:
 		l2 = libHtml()
 		content = l2.form_cadre(request,'member_list',content)
