@@ -35,6 +35,7 @@ class Member(m.Model):
 	def __str__(self):
 		return self.firstname + " " + self.lastname + " (" + self.job.title + ")"
 	
+
 	def __getattr__(self,nom):
 		if nom == 'job':
 			l = str(self.job.title)

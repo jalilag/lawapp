@@ -45,6 +45,14 @@ class libHtml:
 		s +='>' + content + '</' + cont_type + '>'
 		return s
 
+	def section(self,title,content,classe = None):
+		s = '<section '
+		if classe is not None:
+			s += 'class="' + classe +'"'
+		s += '>'
+		s += self.titre(title)
+		s+= self.container(content,'div')
+		return s
 
 	def liste(self,reslist):
 		"""
@@ -59,6 +67,7 @@ class libHtml:
 	def lien(self,titre,adresse):
 		s = '<a href="' + adresse + '">' + titre + '</a>'
 		return s
+
 
 	def tableau(self,reslist,table_class = None,head=True):
 		"""
@@ -125,7 +134,7 @@ class libHtml:
 	def submit_button(self,titre="Submit"):
 		return '<input type="submit" value="' + titre + '" />'
 
-	def photo_display(self,img_path,img_title=None,width="100",height="100"):
+	def photo_display(self,img_path,img_title=None,width="auto",height="150"):
 		if img_title is None:
 			img_title = img_path
 		l = '<img src="' + img_path + '" '
