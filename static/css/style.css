@@ -68,6 +68,11 @@ section div {
 	font-size: 1.2em;
 	padding-left:1em;
 }
+.actualField {
+	font-size: 1.2;
+	padding-left: 1em;
+	color:red;
+}
 
 .wide {
 	width:100%;

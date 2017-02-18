@@ -103,13 +103,13 @@ class libHtml:
 		res += '</table>'
 		return res
 
-	def form_cadre(self,request,action,form_content,fileupload = False):
+	def form_cadre(self,request,action,form_content,fileupload = False,arg=None):
 		"""
 			Permet d'encadre un formulaire avec les informations nécéssaire pour la transmission des infos
 			Possibilité d'ajouté un bouton envoyer
 			form_content est un bloc html contenant les champs du formumlaire
 		"""
-		content = '<form action="' + reverse(action) + '" ' + 'method="post"'
+		content = '<form action="' + reverse(action,args=arg) + '" ' + 'method="post"'
 		if fileupload:
 			content += ' enctype="multipart/form-data"'
 		content += '>'
@@ -118,18 +118,6 @@ class libHtml:
 		content += '</form>'
 		return content
 
-	def form_set_all(self,request,action,form_content,form,title,fileupload=False):
-		"""
-			Mise en forme complete d'un formulaire
-		"""
-		content = self.div(self.form_cadre(request,action,form_content,fileupload), "col-lg-8")
-		if form is not None:
-			if form.errors.__str__() != "":
-				content += self.div(form.errors.__str__(),"col-lg-4")
-		content = self.div(content,"row")
-		content = self.div(self.div(self.titre(title),"col-lg-12"),"row") + content  
-		content = self.div(content, "container")
-		return content
 
 	def submit_button(self,titre="Submit"):
 		return '<input type="submit" value="' + titre + '" />'

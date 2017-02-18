@@ -23,6 +23,9 @@ class Member(m.Model):
 			filename = str(Member.objects.order_by("-id")[0].id +1)
 		else:
 			filename = str(self.id)
+			# Ajouter suppression du fichier deja existant
+		if os.path.isfile(MEDIA_ROOT + '/member/photos/'+ filename + fileformat):
+			os.remove(MEDIA_ROOT + '/member/photos/'+ filename + fileformat)
 		return "member/photos/" + filename + fileformat
 
 

@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     url(r'^member_create$',views.member_create, name='member_create'),
+    url(r'''^member_edit(?:\/(?P<member_id>[^/]+))?''',views.member_edit, name='member_edit'),
     url(r'^job_create$',views.job_create, name='job_create'),
     url(r'^team_create$',views.team_create, name='team_create'),
     url(r'''^member_list(?:\/(?P<resperpage>[^/]+))?'''

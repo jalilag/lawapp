@@ -7,18 +7,19 @@ class form_member_create(f.ModelForm):
 		fields = '__all__'
 
 	def clean(self):
-	    cleaned_data = super(form_member_create, self).clean()
-	    photo = cleaned_data.get("photo")
-	    lastname = cleaned_data.get("lastname")
-	    firstname = cleaned_data.get("firstname")
-	    for dat in Member.objects.all():
-	    	if dat.firstname == firstname and dat.lastname == lastname:
-	    		raise f.ValidationError("Ce membre existe déja", code="err1")
-	    return cleaned_data
+		cleaned_data = super(form_member_create, self).clean()
+		photo = cleaned_data.get("photo")
+		lastname = cleaned_data.get("lastname")
+		firstname = cleaned_data.get("firstname")
+		for dat in Member.objects.all():
+			if dat.firstname == firstname and dat.lastname == lastname:
+				raise f.ValidationError("Ce membre existe déja", code="err1")
+		return cleaned_data
 
-class form_list_delete(f.ModelForm):
-	id = f.CheckboxInput()
-
+class form_member_edit(f.ModelForm):
+	class Meta:
+		model = Member
+		fields = '__all__'
 
 class form_job_create(f.ModelForm):
 	class Meta:

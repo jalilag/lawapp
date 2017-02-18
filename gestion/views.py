@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,reverse,get_object_or_404
 from django.views.generic import ListView
-from .forms import form_member_create, form_job_create, form_team_create
+from .forms import form_member_create, form_member_edit, form_job_create, form_team_create
 from lib.form import lib_get_field_from_form
 from lib.html import libHtml
 from lib.list import build_list_html
@@ -14,8 +14,8 @@ def member_create(request):
 	"""
 	l2 = libHtml()
 	form = form_member_create(request.POST or None,request.FILES) # Signifie que si le formulaire est retourné invalide il est rechargé avec les erreurs
+	l = lib_get_field_from_form(form)
 
-	l = lib_get_field_from_form(form,'d')
 	l1 = [
 	[[l["firstname"]["label"]],[l["firstname"]["field"]],[l["lastname"]["label"]],[l["lastname"]["field"]]],
 	[[l["job"]["label"]],[l["job"]["field"]]],
@@ -33,6 +33,37 @@ def member_create(request):
 	if form.is_valid():
 		form.save()
 		return redirect('member_list')		
+		# Génération de la page en cas de réussite
+	return render(request, 'gestion/template/form.html', locals())
+
+
+def member_edit(request,member_id):
+	obj = get_object_or_404(Member,pk=member_id)
+	if request.method == 'POST':
+		form = form_member_edit(request.POST or None,request.FILES,instance=obj) # Signifie que si le formulaire est retourné invalide il est rechargé avec les erreurs
+	else:
+		form = form_member_edit(instance=obj) # Signifie que si le formulaire est retourné invalide il est rechargé avec les erreurs
+	l = lib_get_field_from_form(form)
+	l2 = libHtml()
+
+	l1 = [
+	[[l["firstname"]["label"]],[l["firstname"]["field"]],[l["lastname"]["label"]],[l["lastname"]["field"]]],
+	[[l["job"]["label"]],[l["job"]["field"]]],
+	[[l["team"]["label"]],[l["team"]["field"]]],
+	[[l["photo"]["label"]],[l["photo"]["field"]]],
+	[[l2.submit_button("Envoyé")]],
+	]
+	if 'errors' in l:
+		print(l['errors'])
+	# Formation du formulaire
+	content = l2.form_cadre(request,"member_edit",l2.tableau(l1),True,arg=[member_id])
+	# content = l2.form_cadre(request,"member_edit",form.as_p(),True,arg=[member_id])
+	content = l2.section('Edition de membre',content)
+	content = l2.container(content,'div','col-md-8 col-md-offset-2')
+
+	if form.is_valid():
+		form.save()
+		return redirect('member_view',member_id)
 		# Génération de la page en cas de réussite
 	return render(request, 'gestion/template/form.html', locals())
 
@@ -120,6 +151,7 @@ def member_view(request,id_num):
 			s += ', '
 
 	tab = [
+	[[l2.button('Edit',reverse('member_edit',args=[id_num]))]],
 	[[get_verbose(o,'firstname') + " : ",'class="bbigField"'],[o.firstname,'class="bigField"']],
 	[[get_verbose(o,'lastname') + " : ",'class="bbigField"'],[o.lastname,'class="bigField"']],
 	[[get_verbose(o,'job') + " : ",'class="bbigField"'],[l2.lien(str(o.job),reverse('job_list',args=[o.job.pk])),'class="bigField"']],
