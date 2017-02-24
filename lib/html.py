@@ -3,6 +3,7 @@
 """
 from django.middleware import csrf
 from django.shortcuts import reverse
+import os
 class libHtml:
 	"""
 		Classe permettant de générer facilement du code HTML
@@ -103,15 +104,19 @@ class libHtml:
 		res += '</table>'
 		return res
 
-	def form_cadre(self,request,action,form_content,fileupload = False,arg=None):
+	def form_cadre(self,request,action,form_content,fileupload = False,arg=None,name=None,option=None):
 		"""
 			Permet d'encadre un formulaire avec les informations nécéssaire pour la transmission des infos
 			Possibilité d'ajouté un bouton envoyer
 			form_content est un bloc html contenant les champs du formumlaire
 		"""
 		content = '<form action="' + reverse(action,args=arg) + '" ' + 'method="post"'
+		if name is not None:
+			content += ' name="' + name +'"'
 		if fileupload:
 			content += ' enctype="multipart/form-data"'
+		if option is not None:
+			content += ' ' +option
 		content += '>'
 		content += '<input type="hidden" name="csrfmiddlewaretoken" value="' + csrf.get_token(request) + '">'
 		content += form_content
@@ -122,28 +127,38 @@ class libHtml:
 	def submit_button(self,titre="Submit"):
 		return '<input type="submit" value="' + titre + '" />'
 
-	def photo_display(self,img_path,img_title=None,width="auto",height="150"):
+	def photo_display(self,img_path,img_title=None,width="150",height="auto"):
 		if img_title is None:
-			img_title = img_path
+			if os.path.isfile(img_path):
+				img_title = img_path
+			else:
+				img_title = "Image introuvable"
 		l = '<img src="' + img_path + '" '
 		l+= 'alt="' + img_title + '" '
 		l+= 'style="width:' + width + 'px;height:' + height + 'px;">'
 		return l
 
-	def button(self,title=None,address="#",classname="default"):
+	def button(self,title=None,address="#",classname="default",glyph=None):
 		s = '<a '
-		s += 'class="' + 'btn btn-' + classname + '" '
+		s += 'class="' + 'btn btn-' + classname + '"'
 		s += 'href="' + address + '" '
 		s += 'role="button"'
 		s+= '>'
+		if glyph is not None:
+			s += '<span class="glyphicon glyphicon-' + glyph + '" aria-hidden="true"</span>'
 		if title is not None:
 			s += title 
 		s += '</a>'
 		return s
 
 
-	def checkbox(self,name,val):
-		s = '<input type="checkbox" '
+	def checkbox(self,name,val="",id=None):
+		return self.input("checkbox",name,val)
+
+	def input(self,type,name,val="", idkey=None):
+		s = '<input type="' + type + '" '
+		if idkey is not None:
+			s+= 'id="' + idkey +'" '
 		s += 'name="' + name + '" ' 
 		s += 'value="' + str(val) + '" '
 		s += '/>'

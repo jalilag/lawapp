@@ -28,7 +28,7 @@ def build_list(class_name,obj,fields,address_name,argx=[10,1,'id'], cell_link=No
 		bloc_num = int(N/res_num)+1
 	if head:
 		for j in fields:
-			arg = argx
+			arg = list(argx)
 			arg[Narg-2]= '1'
 			arg[Narg-3]= res_num
 			if j == orderby:
@@ -36,7 +36,7 @@ def build_list(class_name,obj,fields,address_name,argx=[10,1,'id'], cell_link=No
 			else:
 				arg[Narg-1]= j
 			if j == 'delete':
-				l1 = ['<input class="btn btn-danger del" type="submit" value="X" />']
+				l1 = ['<input id="button_delete" class="btn btn-danger del" type="submit" value="X" />']
 			else:
 				l1 = [l2.lien(class_name._meta.get_field(j).verbose_name,reverse(address_name,args=arg))]
 			slist.append(l1)
@@ -47,7 +47,11 @@ def build_list(class_name,obj,fields,address_name,argx=[10,1,'id'], cell_link=No
 			slist = list()
 			for j in fields:
 				if j == "photo":
-					l1 = [l2.photo_display(MEDIA_URL+str(i.__getattribute__(j)))]
+					if cell_link is None:
+						l1 = [l2.photo_display(MEDIA_URL+str(i.__getattribute__(j)))]
+					else:
+						l1 = [l2.photo_display(MEDIA_URL+str(i.__getattribute__(j))),
+						"""onclick='location.href=\"""" + reverse(cell_link)+ """/"""+ str(i.__getattribute__('id')) + """\"'"""]
 				elif j == "delete":
 					l1 = [l2.checkbox('delete',i.__getattribute__('id'))]
 				else:
@@ -76,7 +80,7 @@ def build_list_html(class_name,obj,fields,listaddress,argx=[10,1,'id'], cell_lin
 	res = ['5','10','20','50']
 	but = '<table class="but_res"><tr>'
 	for i in res:
-		arg = argx
+		arg = list(argx)
 		arg[Narg-3] = i
 		but +='<td>'
 		but += l2.button(i,reverse(listaddress,args=arg))
@@ -110,7 +114,7 @@ def res_per_page(address_name,res_num,argx):
 		content = 'Choisissez une page: '
 		for i in range(currentpage-3,currentpage):
 			if i > 0:
-				arg = argx
+				arg = list(argx)
 				arg[Narg-2] = str(i)
 				content += l2.lien(str(i),reverse(address_name,args=arg))
 				if i <= currentpage - 1:
@@ -120,7 +124,7 @@ def res_per_page(address_name,res_num,argx):
 			content += ', '
 		for i in range(currentpage+1,currentpage+4):
 			if i <= N:
-				arg = argx
+				arg = list(argx)
 				arg[Narg-2] = str(i)
 				content += l2.lien(str(i),reverse(address_name,args=arg))
 				if i < currentpage+3 and i<N:

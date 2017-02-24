@@ -20,7 +20,10 @@ class Member(m.Model):
 		fileformat = os.path.splitext(filename)[1]
 		filename = os.path.splitext(filename)[0]
 		if not self.pk:
-			filename = str(Member.objects.order_by("-id")[0].id +1)
+			if Member.objects.count() > 0:
+				filename = str(Member.objects.order_by("-id")[0].id +1)
+			else:
+				filename = "1"
 		else:
 			filename = str(self.id)
 			# Ajouter suppression du fichier deja existant

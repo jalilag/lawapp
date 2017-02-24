@@ -25,7 +25,9 @@ urlpatterns = [
                     r'''(?:\/(?P<bloc>[^/]+))?'''
                     r'''(?:\/(?P<orderby>[^/]+))?'''
         ,views.group_list, name='group_list'),
-
+    url(r'^search$',views.search, name='search'),
+    url(r'^ajax_member_list_delete/$',views.ajax_member_list_delete),
+    url(r'^ajax_search/$',views.ajax_search),
 ]
 
     # url(r'''^community(?:\/(?P<base_slug>[^/]+))'''
