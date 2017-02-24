@@ -90,15 +90,27 @@ a[role="button"] {
 	font-weight:bold;
 }
 
+#search{
+	width:100%;
+}
 #autocomplete {
     display: block; 
     position:relative
 } 
 .ui-autocomplete {
     position: absolute;
-    color: #000;
+    /*color: #000;*/
     background-color: #fff;
-    padding:0.1em;
+    padding:0.2em;
     font-size:1em;
-    font-weight:bold;
+}
+
+.ui-autocomplete li a:hover {
+	font-weight:bold;
+	background-color: #fff;
+	border:0;
+	text-decoration: none;
+}
+.ui-autocomplete ul:hover {
+	background-color: #fff;
 }

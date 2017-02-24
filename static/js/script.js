@@ -52,13 +52,45 @@ function check_del() {
 // 	},
 // 	minLength : 2
 // });
-$('#search').autocomplete({
-	source: "/gestion/ajax_search/",
-	minLength: 2,
-	// position: {my: "center", at: "center", collision: "fit"},
-	appendTo: "#autocomplete",
-});
-//  	var x=document.getElementsByName("delete");
+// $('#search').autocomplete({
+// 	minLength: 2,
+// 	// appendTo: "#autocomplete",
+// 	source: "/gestion/ajax_search/"
+// 	// position: {my: "center", at: "center", collision: "fit"},
+// }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {  
+// 	return $( "<li>" )  
+// 		// .data( "ui-autocomplete-item", item )  
+// 		.append('<span class="test">'  + item.label + "kaka" + "</span>") //"<img style='width:25px;height:25px' src='" + "http://itsolutionstuff.com/frontTheme/images/logo.png" + "' /> "
+// 		.appendTo(ul);  
+// };
+$("#search")
+    .autocomplete({
+		minLength: 2,
+		appendTo: "#autocomplete",
+		source: "/gestion/ajax_search/",
+        select: function( event, ui ) { 
+    		window.location.href = ui.item.url;
+    	}
+    })
+	.data( "autocomplete" )._renderItem = function( ul, item ) {
+		return $( "<li></li>" )
+			.data( "item.autocomplete", item )
+			.append(  item.label )
+			.appendTo( ul );
+	};    
+    
+
+
+// $("#search").autocomplete({
+// 		minLength: 2,
+// 		source: "/gestion/ajax_search/"
+// 	}).data("ui-autocomplete")._renderItem = function( ul, item ) {
+// 	      return $("<li></li>").data("ui-autocomplete.item", item)
+// 			// .attr( "data-value", item.value )
+// 	        .append("<a>" + item.label + "kaka<br>" + item.value + "</a>" )
+// 		    .appendTo( ul );		
+// };
+  	// var x=document.getElementsByName("delete");
 //  	var res = '';
 //  	j=0
 // 	for (var i = 0; i < x.length; i++) {

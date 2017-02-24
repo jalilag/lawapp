@@ -234,9 +234,11 @@ def ajax_search(request):
 		for i in o:
 			data1 = dict()
 			data1['value'] = i.firstname + " " + i.lastname
-			data1['label'] = i.firstname + " " + i.lastname
-			data1['image'] = s.photo_display(MEDIA_URL+str(i.photo),None,"32","32")
+			data1['label'] = "<a>" + s.photo_display(MEDIA_URL+str(i.photo),None,'32','32') + i.firstname + " " + i.lastname + "</a>"
+			data1['url'] = reverse('member_view',args=[i.id])
+			print(data1['label'])
 			data.append(data1)
+			print(data)
 		return JsonResponse(data,safe=False)
 	else:
 		data = 'fail'
