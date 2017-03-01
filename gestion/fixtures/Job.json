@@ -1,0 +1,16 @@
+[
+  {
+    "model": "gestion.Job",
+    "pk": 1,
+    "fields": {
+      "title": "Avocat"
+    }
+  },
+  {
+    "model": "gestion.Job",
+    "pk": 2,
+    "fields": {
+      "title": "Coursier"
+    }
+  }
+]

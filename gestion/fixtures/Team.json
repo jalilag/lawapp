@@ -1,0 +1,23 @@
+[
+  {
+    "model": "gestion.Team",
+    "pk": 1,
+    "fields": {
+      "title": "Groupe 1"
+    }
+  },
+  {
+    "model": "gestion.Team",
+    "pk": 2,
+    "fields": {
+      "title": "Groupe 2"
+    }
+  },
+  {
+    "model": "gestion.Team",
+    "pk": 3,
+    "fields": {
+      "title": "Groupe 3"
+    }
+  }
+]

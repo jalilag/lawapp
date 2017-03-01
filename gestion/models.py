@@ -31,12 +31,13 @@ class Member(m.Model):
 			os.remove(MEDIA_ROOT + '/member/photos/'+ filename + fileformat)
 		return "member/photos/" + filename + fileformat
 
-
+	login = m.CharField(max_length=50, verbose_name="Login")
+	password = m.CharField(max_length=128, verbose_name="Mot de passe")
 	lastname = m.CharField(max_length=50,verbose_name = "Nom")
 	firstname = m.CharField(max_length=50, verbose_name = "Prénom")
 	photo = m.ImageField(upload_to=get_image_path,verbose_name="Photo")
 	job = m.ForeignKey('Job',verbose_name="Fonction")
-	team = m.ManyToManyField(Team,through='CrossMemberTeam',verbose_name="Equipe")
+	team = m.ManyToManyField(Team,verbose_name="Equipe")
 
 	def __str__(self):
 		return self.firstname + " " + self.lastname + " (" + self.job.title + ")"
@@ -76,12 +77,12 @@ class Job(m.Model):
 	def __str__(self):
 		return self.title
 
-class CrossMemberTeam(m.Model):
-	"""
-		Classe de liaison personel et groupe
-	"""
-	class Meta:
-		auto_created = True
+# class CrossMemberTeam(m.Model):
+# 	"""
+# 		Classe de liaison personel et groupe
+# 	"""
+# 	# class Meta:
+# 	# 	auto_created = True
 
-	member = m.ForeignKey('Member')
-	team = m.ForeignKey('Team')
+# 	member = m.ForeignKey('Member',on_delete=m.CASCADE)
+# 	team = m.ForeignKey('Team',on_delete=m.CASCADE)

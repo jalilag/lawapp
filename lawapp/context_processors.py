@@ -5,4 +5,3 @@ def gen_var(request):
 	gens['CHARSET'] = 'UTF-8'
 	gens['LANG_CODE'] = settings.LANGUAGE_CODE
 	return gens
-	

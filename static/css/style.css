@@ -32,6 +32,9 @@ section div {
 	padding: 1em;
 	box-shadow: 0.5em 0.5em 2em;
 }
+table tr {
+	margin-top:2em;
+}
 .class_list {
 	width:100%;
 }
@@ -114,3 +117,31 @@ a[role="button"] {
 .ui-autocomplete ul:hover {
 	background-color: #fff;
 }
+.fieldset {
+	font-size:1.2em;
+	color:red;
+	background-color: #fff;
+	padding: 0.2em 0 0.2em 0.2em;
+	border-radius:0.5em;
+}
+.tab_form {
+	/*border:1px solid;*/
+	width:100%;
+}
+
+.tdlab {
+	text-align:left;
+	width:15%;
+}
+.tdfield {
+	text-align:left;
+	width:35%;
+}
+.tab_form input {
+	width:80%;
+}
+.tab_button {
+	width:100%;
+
+}
+

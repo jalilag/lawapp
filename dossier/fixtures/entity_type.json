@@ -1,0 +1,16 @@
+[
+  {
+    "model": "dossier.Entity_type",
+    "pk": 1,
+    "fields": {
+      "titre": "Personne physique"
+    }
+  },
+  {
+    "model": "dossier.Entity_type",
+    "pk": 2,
+    "fields": {
+      "titre": "Personne morale"
+    }
+  }
+]

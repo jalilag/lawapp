@@ -14,27 +14,40 @@ def member_create(request):
 	"""
 		Vue d'édition et de création des membres
 	"""
-	l2 = libHtml()
+	s = libHtml()
 	form = form_member_create(request.POST or None,request.FILES) # Signifie que si le formulaire est retourné invalide il est rechargé avec les erreurs
-	l = lib_get_field_from_form(form)
+	l = lib_get_field_from_form(form,Member)
 
-	l1 = [
-	[[l["firstname"]["label"]],[l["firstname"]["field"]],[l["lastname"]["label"]],[l["lastname"]["field"]]],
-	[[l["job"]["label"]],[l["job"]["field"]]],
-	[[l["team"]["label"]],[l["team"]["field"]]],
-	[[l["photo"]["label"]],[l["photo"]["field"]]],
-	[[l2.submit_button("Envoyé")]],
-	]
+	l1 = {1:{'Connection':
+	[
+		[[l["login"]["label"]],[l["login"]["field"]],
+		[l["password"]["label"]],[l["password"]["field"]]]
+	]},
+	2:{'Identité':
+	[
+		[[l["firstname"]["label"]],[l["firstname"]["field"]],[l["lastname"]["label"]],[l["lastname"]["field"]]],
+		[[l["photo"]["label"]],[l["photo"]["field"]]],
+		[[l["team"]["label"]],[l["team"]["field"]]],
+		[[l["job"]["label"]],[l["job"]["field"]]],
+	]}
+	}
+	content = s.tab_with_fieldset(l1,'tab_form') 
+
+	if request.method == 'POST':
+		if form.is_valid():
+			form.save()
+			return redirect('member_list')		
+		else:
+			content = l['errors'] + s.tab_with_fieldset(l1,'tab_form')
+
+	# content += s.fieldset('Identité',s.tableau(l2,None,False)) 
+	content += s.tableau([[[s.submit_button("Envoyé")],[s.button("Liste des membres",reverse('member_list')),'class="right"']]],'tab_button')
 
 	# Formation du formulaire
-	content = l2.form_cadre(request,"member_create",l2.tableau(l1),True)
+	content = s.form_cadre(request,"member_create",content,True)
 	# content = l2.form_set_all(request,"create",form.as_table(),None,"azeazea")
-	content = l2.section('Création de membre',content)
-	content = l2.container(content,'div','col-md-6 col-md-offset-3')
-
-	if form.is_valid():
-		form.save()
-		return redirect('member_list')		
+	content = s.section('Création de membre',content)
+	content = s.container(content,'div','col-md-6 col-md-offset-3')
 		# Génération de la page en cas de réussite
 	return render(request, 'gestion/template/form.html', locals())
 
@@ -44,29 +57,39 @@ def member_edit(request,member_id):
 	if request.method == 'POST':
 		form = form_member_edit(request.POST or None,request.FILES,instance=obj) # Signifie que si le formulaire est retourné invalide il est rechargé avec les erreurs
 	else:
-		form = form_member_edit(instance=obj) # Signifie que si le formulaire est retourné invalide il est rechargé avec les erreurs
-	l = lib_get_field_from_form(form)
-	l2 = libHtml()
+		form = form_member_edit(instance=obj) # Instance = obj permet de préremplir
+	l = lib_get_field_from_form(form,Member)
+	s = libHtml()
 
-	l1 = [
-	[[l["firstname"]["label"]],[l["firstname"]["field"]],[l["lastname"]["label"]],[l["lastname"]["field"]]],
-	[[l["job"]["label"]],[l["job"]["field"]]],
-	[[l["team"]["label"]],[l["team"]["field"]]],
-	[[l["photo"]["label"]],[l["photo"]["field"]]],
-	[[l2.submit_button("Envoyé")]],
-	]
-	if 'errors' in l:
-		print(l['errors'])
+	l1 = {1:{'Connection':
+	[
+		[[l["login"]["label"]],[l["login"]["field"]]]
+	]},
+		2:{'Identité':
+	[
+		[[l["firstname"]["label"]],[l["firstname"]["field"]],[l["lastname"]["label"]],[l["lastname"]["field"]]],
+		[[l["photo"]["label"]],[l["photo"]["field"]]],
+		[[l["team"]["label"]],[l["team"]["field"]]],
+		[[l["job"]["label"]],[l["job"]["field"]]],
+	]}
+	}
+	content = s.tab_with_fieldset(l1,'tab_form') 
+
+	if request.method == 'POST':
+		if form.is_valid():
+			form.save()
+			return redirect(reverse('member_view',args=[member_id]))		
+		else:
+			content = l['errors'] + content
+
+	# content += s.fieldset('Identité',s.tableau(l2,None,False)) 
+	content += s.tableau([[[s.submit_button("Envoyé")],[s.button("Liste des membres",reverse('member_list')),'class="right"']]],'tab_button')
+
 	# Formation du formulaire
-	content = l2.form_cadre(request,"member_edit",l2.tableau(l1),True,arg=[member_id])
-	# content = l2.form_cadre(request,"member_edit",form.as_p(),True,arg=[member_id])
-	content = l2.section('Edition de membre',content)
-	content = l2.container(content,'div','col-md-6 col-md-offset-3')
+	content = s.form_cadre(request,"member_edit",content,True,arg=[member_id])
+	content = s.section('Edition de membre',content)
+	content = s.container(content,'div','col-md-6 col-md-offset-3')
 
-	if form.is_valid():
-		form.save()
-		return redirect('member_view',member_id)
-		# Génération de la page en cas de réussite
 	return render(request, 'gestion/template/form.html', locals())
 
 def member_list(request,resperpage='10', bloc='1', orderby='id' ):

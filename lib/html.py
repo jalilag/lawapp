@@ -55,6 +55,13 @@ class libHtml:
 		s+= self.container(content,'div')
 		return s
 
+	def fieldset(self,title,content):
+		s = "<fieldset>"
+		s += "<legend>" + title + "</legend>"
+		s += content
+		s += "</fieldset>"
+		return s
+
 	def liste(self,reslist):
 		"""
 			Fonction générant une liste ul/li a partir d'une liste de string python
@@ -103,6 +110,93 @@ class libHtml:
 				ct += 1
 		res += '</table>'
 		return res
+
+	def tab_with_fieldset(self,reslist,table_class=None):
+		"""
+			Génére un élément table à partir d'une liste
+			La liste s'écrit : 
+			{
+			legend1: 
+					[
+						[[lab,params],[lab,params],[lab,params]],
+						[[lab,params],[lab,params],[lab,params]],
+					], ...
+			}	
+		"""
+		res = '<table '
+		if table_class is not None:
+			res += 'class="' + table_class + '"'
+		res += '>'
+		ct = 1
+		for l,value in reslist.items():
+			for key,val in value.items():
+				if len(val) > ct:
+					ct = len(val)	
+		for l,value in reslist.items():
+			for key,val in value.items():
+				res += '<tr class="fieldset"><td colspan="' + str(ct) + '">' + key + '</td></tr>'
+				res += '<tr>'
+				for i in val:
+					for c in i:
+						res += '<td '
+						if len(c) > 1:
+							if c[1] != "0":
+								res += c[1] 
+						res += '>'
+						if c[0] != "0":
+							res += str(c[0])
+						res += '</td>' 
+					res +='</tr>'
+		res += '</table>'
+		return res
+
+	def tab_with_fieldset2(self,reslist,table_class=None,auto_class=True):
+		"""
+			Génére un élément table à partir d'une liste
+			La liste s'écrit : 
+			{
+				1:{legend: 
+						[
+							[[lab,params],[lab,params],[lab,params]],
+							[[lab,params],[lab,params],[lab,params]],
+						]
+				}, ...
+			}	
+		"""
+		res = ""
+		for l,value in reslist.items():
+			for key,val in value.items():
+				res += '<fieldset>'
+				res += '<legend>' + key + '</legend>'
+				res += '<table'
+				if table_class is not None:
+					res += ' class="' + table_class + '"'
+				res += '>'
+				for i in val:
+					res += '<tr>'
+					ct = 1
+					for c in i:
+						# print(c[0])
+						ct += 1
+						res += '<td '
+						if len(c) > 1:
+							if c[1] != "0":
+								res += c[1]
+						elif auto_class:
+							print(str(c[0]).find('label'),c[0])
+							if str(c[0]).find('<label') != -1:
+								res += 'class="tdlab"'
+							elif str(c[0]).find('<input') != -1 or str(c[0]).find('<select') != -1:
+								res += 'class="tdfield"'
+						res += '>'
+						if c[0] != "0":
+							res += str(c[0])
+						res += '</td>' 
+					res +='</tr>'
+			res += '</table></fieldset>'
+			# print(res)
+		return res
+
 
 	def form_cadre(self,request,action,form_content,fileupload = False,arg=None,name=None,option=None):
 		"""
