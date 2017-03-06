@@ -65,7 +65,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'lawapp.context_processors.gen_var'
+                'lawapp.context_processors.gen_var',
+                'lawapp.context_processors.quick_connect'
             ],
         },
     },

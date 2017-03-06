@@ -7,8 +7,11 @@ from lib.form import lib_get_field_from_form
 from lib.html import libHtml
 from lib.list import build_list_html
 from lib.model import get_verbose
+from lib.javascript import libJava
 from .models import Member,Job, Team
 from lawapp.settings import MEDIA_URL
+from passlib.hash import pbkdf2_sha256
+
 
 def member_create(request):
 	"""
@@ -46,7 +49,7 @@ def member_create(request):
 	# Formation du formulaire
 	content = s.form_cadre(request,"member_create",content,True)
 	# content = l2.form_set_all(request,"create",form.as_table(),None,"azeazea")
-	content = s.section('Création de membre',content)
+	content = s.section('Création de membre',content,"stdsection")
 	content = s.container(content,'div','col-md-6 col-md-offset-3')
 		# Génération de la page en cas de réussite
 	return render(request, 'gestion/template/form.html', locals())
@@ -63,12 +66,12 @@ def member_edit(request,member_id):
 
 	l1 = {1:{'Connection':
 	[
-		[[l["login"]["label"]],[l["login"]["field"]]]
+		[[l["login"]["label"]],[l["login"]["field"]],["0"],["0"]]
 	]},
 		2:{'Identité':
 	[
 		[[l["firstname"]["label"]],[l["firstname"]["field"]],[l["lastname"]["label"]],[l["lastname"]["field"]]],
-		[[l["photo"]["label"]],[l["photo"]["field"]]],
+		[[l["photo"]["label"]],[l["photo"]["field"],'colspan=3']],
 		[[l["team"]["label"]],[l["team"]["field"]]],
 		[[l["job"]["label"]],[l["job"]["field"]]],
 	]}
@@ -87,7 +90,7 @@ def member_edit(request,member_id):
 
 	# Formation du formulaire
 	content = s.form_cadre(request,"member_edit",content,True,arg=[member_id])
-	content = s.section('Edition de membre',content)
+	content = s.section('Edition de membre',content,'stdsection')
 	content = s.container(content,'div','col-md-6 col-md-offset-3')
 
 	return render(request, 'gestion/template/form.html', locals())
@@ -115,7 +118,7 @@ def member_list(request,resperpage='10', bloc='1', orderby='id' ):
 	content = build_list_html(Member,obj,fields,'member_list',[int(resperpage),int(bloc),orderby],'member_view')
 	if 'delete' in fields:
 		content = l2.form_cadre(request,'member_list',content,name='form_delete',option='onsubmit="return check_del();"')
-	content = l2.section('Liste des membres',content)
+	content = l2.section('Liste des membres',content,'stdsection')
 	content = l2.container(content,'div','col-md-8 col-md-offset-2')
 	return render(request, 'gestion/template/form.html', locals())
 
@@ -142,7 +145,7 @@ def member_view(request,id_num):
 	[[l2.tableau(tab,None,False)],[l2.photo_display(MEDIA_URL+str(o.__getattribute__('photo')),None,'200'),'class="right"']]
 	]
 
-	content = l2.section(o.firstname + " " + o.lastname,l2.tableau(tabh,'wide',False))
+	content = l2.section(o.firstname + " " + o.lastname,l2.tableau(tabh,'wide',False),'stdsection')
 	content = l2.container(content,'div','col-md-6 col-md-offset-3')
 	return render(request, 'gestion/template/form.html', locals())
 
@@ -158,7 +161,7 @@ def job_create(request):
 	[[l2.submit_button("Envoyé")]],
 	]
 	content = l2.form_cadre(request,"job_create",l2.tableau(l1))	
-	content = l2.section('Création des profils',content)
+	content = l2.section('Création des profils',content,'stdsection')
 	content = l2.container(content,'div','col-md-6 col-md-offset-3')
 	if form.is_valid():
 		form.save()
@@ -179,7 +182,7 @@ def team_create(request):
 	]
 
 	content = l2.form_cadre(request,"team_create",l2.tableau(l1))	
-	content = l2.section('Création des équipes',content)
+	content = l2.section('Création des équipes',content,'stdsection')
 	content = l2.container(content,'div','col-md-6 col-md-offset-3')
 
 	if form.is_valid():
@@ -202,7 +205,7 @@ def job_list(request,job_id,resperpage='10',bloc='1', orderby='id' ):
 	go = get_object_or_404(Job,pk=int(job_id))
 	o = Member.objects.filter(job=job_id).order_by(orderby)
 	content = build_list_html(Member,o,fields,'job_list',[job_id,int(resperpage),int(bloc),orderby],'member_view')
-	content = l2.section(go.title,content)
+	content = l2.section(go.title,content,'stdsection')
 	content = l2.container(content,'div','col-md-8 col-md-offset-2')
 	return render(request, 'gestion/template/form.html', locals())
 
@@ -218,15 +221,17 @@ def group_list(request,group_id,resperpage='10',bloc='1', orderby='id'):
 	o = Member.objects.filter(team=group_id).order_by(orderby)
 	go = get_object_or_404(Team,pk=int(group_id))
 	content = build_list_html(Member,o,fields,'group_list',[group_id,int(resperpage),int(bloc),orderby],'member_view')
-	content = l2.section(go.title,content)
+	content = l2.section(go.title,content,'stdsection')
 	content = l2.container(content,'div','col-md-8 col-md-offset-2')
 	return render(request, 'gestion/template/form.html', locals())
 
 def search(request):
 	s = libHtml()
+	j = libJava()
 	content = s.input("text","recherche","","search")
 	content += s.container("",'span',"","autocomplete")
-	content = s.section("Recherche",content)
+	content += j.autocomplete('search','autocomplete','/gestion/ajax_search/')
+	content = s.section("Recherche",content,'stdsection')
 	content = s.container(content,'div','col-md-4 col-md-offset-4')
 	return render(request, 'gestion/template/form.html', locals())
 
@@ -267,3 +272,32 @@ def ajax_search(request):
 		data = 'fail'
 		mimetype = 'application/json'
 		return HttpResponse(data, mimetype)
+
+def ajax_member_connect(request):
+	login = request.GET.get('login', None)
+	password = request.GET.get('password',None)
+	try:
+		o = Member.objects.get(login=login)
+	except:
+		o = None
+	if o is not None and pbkdf2_sha256.verify(password,o.password):
+		request.session['member'] = o.id
+		request.session.set_expiry(300) # REMPLACER PAR CONFIG
+		l = manage_quick_connect(o)
+		data = {'val': l}
+	else:
+		data = {'val' : "none"}
+	return JsonResponse(data)	
+
+def manage_quick_connect(obj=None):
+	s = libHtml()
+	if obj is not None:
+		l = s.photo_display(MEDIA_URL + str(obj.photo),None,"64") + " " + str(obj)
+		l = s.lien(l,reverse('member_view',args=[obj.id]))
+	else:
+		l= [
+		[[s.input("text",None,"Login","c_login")],[s.button("Ok",balise='button',classname='info',params='onClick="quick_connect()"'),'rowspan="2"']],
+		[[s.input("password",None,"*****","c_password")]]
+		]
+		l = s.container(s.tableau(l,head=False,idkey="c_connection_table"),'div',None,"c_connection")
+	return l

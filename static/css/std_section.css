@@ -1,0 +1,21 @@
+.stdsection {
+	margin-top : 1em;
+	margin-bottom : 1em;
+}
+.stdsection h1 {
+	background: linear-gradient(to bottom,#1f001c,#520044);
+	width: 100%;
+	border-radius: 1em 1em 0em 0em;
+	color:#fff;
+	text-align: center;
+	margin-bottom:0;
+	box-shadow: 0.5em 0.5em 2em;
+	font-size:1.5em;
+	padding: 0.3em 0 0.2em 0;
+}
+.stdsection div {
+	margin-top:0;
+	/*border: 1px solid;*/
+	padding: 1em;
+	box-shadow: 0.5em 0.5em 2em;
+}

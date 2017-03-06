@@ -29,25 +29,68 @@ function check_del() {
 							} 
 				        }
 				    }
-				}.
+				}
 			}
 	    });
 	}
 	return true;
 }
 
-$("#search")
-    .autocomplete({
-		minLength: 2,
-		appendTo: "#autocomplete",
-		source: "/gestion/ajax_search/",
-        select: function( event, ui ) { 
-    		window.location.href = ui.item.url;
-    	}
-    })
-	.data( "autocomplete" )._renderItem = function( ul, item ) {
-		return $( "<li></li>" )
-			.data( "item.autocomplete", item )
-			.append(  item.label )
-			.appendTo( ul );
-	};
+function quick_connect() {
+	login = document.getElementById("c_login").value;
+	password = document.getElementById("c_password").value;
+	if (login.length > 0 && password.length > 0) { 
+	   	$.ajax({
+	        url: '/gestion/ajax_member_connect/',
+	        data: {'login': login, 'password': password},
+	        dataType: 'json',
+	        // async: false,
+	        success: function (data) {
+	        	if (data.val != "none") {
+	        		alert(data.val);
+	        		$("#c_connection_table").remove();
+	        		$("#c_connection").append(data.val);
+	        	} else {	        		
+	        		alert("aucun");
+	        	}
+	        }
+		});
+	}
+}
+
+$("#c_login").mouseenter(function() {
+	if ($("#c_login").val() == "Login") {
+		$("#c_login").val("");
+	}
+});
+$("#c_login").mouseleave(function() {
+	if ($("#c_login").val() == "") {
+		$("#c_login").val("Login");
+	}
+});
+$("#c_password").mouseenter(function() {
+	if ($("#c_password").val() == "*****") {
+		$("#c_password").val("");
+	}
+});
+$("#c_password").mouseleave(function() {
+	if ($("#c_password").val() == "") {
+		$("#c_password").val("*****");
+	}
+});
+
+// $("#search")
+//     .autocomplete({
+// 		minLength: 2,
+// 		appendTo: "#autocomplete",
+// 		source: "/gestion/ajax_search/",
+//         select: function( event, ui ) { 
+//     		window.location.href = ui.item.url;
+//     	}
+//     })
+// 	.data( "autocomplete" )._renderItem = function( ul, item ) {
+// 		return $( "<li></li>" )
+// 			.data( "item.autocomplete", item )
+// 			.append(  item.label )
+// 			.appendTo( ul );
+// 	};

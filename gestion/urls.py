@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^search$',views.search, name='search'),
     url(r'^ajax_member_list_delete/$',views.ajax_member_list_delete),
     url(r'^ajax_search/$',views.ajax_search),
+    url(r'^ajax_member_connect/$',views.ajax_member_connect),
 ]
 
     # url(r'''^community(?:\/(?P<base_slug>[^/]+))'''

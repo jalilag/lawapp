@@ -77,7 +77,7 @@ class libHtml:
 		return s
 
 
-	def tableau(self,reslist,table_class = None,head=True):
+	def tableau(self,reslist,table_class = None, head=True, idkey=None):
 		"""
 			Génére un élément table à partir d'une liste
 			La liste s'écrit : 
@@ -88,11 +88,13 @@ class libHtml:
 		"""
 		ct = 1
 		res = '<table '
+		if idkey is not None:
+			res += 'id="' + idkey + '" '
 		if table_class is not None:
 			res += 'class="' + table_class + '"'
 		res += '>'
 		for i in reslist:
-			if ct == 1 and head:
+			if ct == 1 and head==True:
 				res += '<thead>'
 			res += '<tr>'
 			for c in i:
@@ -105,52 +107,14 @@ class libHtml:
 					res += str(c[0])
 				res += '</td>' 
 			res +='</tr>'
-			if ct == 1 and head:
+			if ct == 1 and head==True:
 				res += '</thead>'
-				ct += 1
+			ct += 1
 		res += '</table>'
 		return res
 
-	def tab_with_fieldset(self,reslist,table_class=None):
-		"""
-			Génére un élément table à partir d'une liste
-			La liste s'écrit : 
-			{
-			legend1: 
-					[
-						[[lab,params],[lab,params],[lab,params]],
-						[[lab,params],[lab,params],[lab,params]],
-					], ...
-			}	
-		"""
-		res = '<table '
-		if table_class is not None:
-			res += 'class="' + table_class + '"'
-		res += '>'
-		ct = 1
-		for l,value in reslist.items():
-			for key,val in value.items():
-				if len(val) > ct:
-					ct = len(val)	
-		for l,value in reslist.items():
-			for key,val in value.items():
-				res += '<tr class="fieldset"><td colspan="' + str(ct) + '">' + key + '</td></tr>'
-				res += '<tr>'
-				for i in val:
-					for c in i:
-						res += '<td '
-						if len(c) > 1:
-							if c[1] != "0":
-								res += c[1] 
-						res += '>'
-						if c[0] != "0":
-							res += str(c[0])
-						res += '</td>' 
-					res +='</tr>'
-		res += '</table>'
-		return res
 
-	def tab_with_fieldset2(self,reslist,table_class=None,auto_class=True):
+	def tab_with_fieldset(self,reslist,table_class=None,auto_class=True):
 		"""
 			Génére un élément table à partir d'une liste
 			La liste s'écrit : 
@@ -204,7 +168,11 @@ class libHtml:
 			Possibilité d'ajouté un bouton envoyer
 			form_content est un bloc html contenant les champs du formumlaire
 		"""
-		content = '<form action="' + reverse(action,args=arg) + '" ' + 'method="post"'
+		if action != "#":
+			link = reverse(action,args=arg)
+		else:
+			link = "#"
+		content = '<form action="' + link + '" ' + 'method="post"'
 		if name is not None:
 			content += ' name="' + name +'"'
 		if fileupload:
@@ -232,28 +200,32 @@ class libHtml:
 		l+= 'style="width:' + width + 'px;height:' + height + 'px;">'
 		return l
 
-	def button(self,title=None,address="#",classname="default",glyph=None):
-		s = '<a '
+	def button(self,title=None,address="#",classname="default",glyph=None,balise='a',params=None):
+		s = '<' + balise + ' '
 		s += 'class="' + 'btn btn-' + classname + '"'
 		s += 'href="' + address + '" '
-		s += 'role="button"'
+		s += 'role="button" '
+		if params is not None:
+			s += params
 		s+= '>'
+
 		if glyph is not None:
 			s += '<span class="glyphicon glyphicon-' + glyph + '" aria-hidden="true"</span>'
 		if title is not None:
 			s += title 
-		s += '</a>'
+		s += '</' + balise + '>'
 		return s
 
 
 	def checkbox(self,name,val="",id=None):
 		return self.input("checkbox",name,val)
 
-	def input(self,type,name,val="", idkey=None):
+	def input(self,type,name=None,val="", idkey=None):
 		s = '<input type="' + type + '" '
 		if idkey is not None:
 			s+= 'id="' + idkey +'" '
-		s += 'name="' + name + '" ' 
+		if name is not None:
+			s += 'name="' + name + '" ' 
 		s += 'value="' + str(val) + '" '
 		s += '/>'
 		return s

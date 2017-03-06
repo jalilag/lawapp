@@ -36,7 +36,7 @@ def build_list(class_name,obj,fields,address_name,argx=[10,1,'id'], cell_link=No
 			else:
 				arg[Narg-1]= j
 			if j == 'delete':
-				l1 = ['<input id="button_delete" class="btn btn-danger del" type="submit" value="X" />']
+				l1 = ['<input id="button_delete" class="btn btn-danger btn-xs del" type="submit" value="X" />']
 			else:
 				l1 = [l2.lien(class_name._meta.get_field(j).verbose_name,reverse(address_name,args=arg))]
 			slist.append(l1)
