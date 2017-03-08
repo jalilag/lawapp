@@ -28,7 +28,7 @@ class form_member_create(f.ModelForm):
 
 	def clean_password(self):
 		data = self.cleaned_data['password']
-		enc_password = pbkdf2_sha256.encrypt(data,rounds=12000,salt_size=32)
+		enc_password = Member.encrypt(data)
 		return enc_password
 
 class form_member_edit(f.ModelForm):
@@ -45,6 +45,23 @@ class form_member_edit(f.ModelForm):
 					self.add_error("login","Ce login existe déja")
 		return cleaned_data
 
+
+class form_login(f.ModelForm):
+	class Meta:
+		model = Member
+		fields = ('login','password')
+		widgets = {'password':f.TextInput(attrs={'type':'password'})}
+	def clean(self):
+		cleaned_data = super(form_login, self).clean()
+		login = cleaned_data.get("login")
+		password = cleaned_data.get("password")
+		try:
+			o=Member.objects.get(login=login)
+			if o.check_password(password) is not True:
+				self.add_error('password',"Le mot de passe est incorrect !")
+		except:
+			self.add_error("login","Ce login n'éxiste pas !")
+		return cleaned_data
 
 class form_job_create(f.ModelForm):
 	class Meta:

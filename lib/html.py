@@ -203,7 +203,8 @@ class libHtml:
 	def button(self,title=None,address="#",classname="default",glyph=None,balise='a',params=None):
 		s = '<' + balise + ' '
 		s += 'class="' + 'btn btn-' + classname + '"'
-		s += 'href="' + address + '" '
+		if address is not None:
+			s += 'href="' + address + '" '
 		s += 'role="button" '
 		if params is not None:
 			s += params
@@ -229,3 +230,12 @@ class libHtml:
 		s += 'value="' + str(val) + '" '
 		s += '/>'
 		return s
+
+	def label(self,title,class_name=None):
+		s = '<label '
+		if class_name is not None:
+			s += 'class="' + class_name +'"'
+		s += '>' + title + '</label>'
+
+	def p(self,content):
+		return '<p>' + content + '</p>'

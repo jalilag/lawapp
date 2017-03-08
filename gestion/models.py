@@ -1,6 +1,7 @@
 from django.db import models as m
 import os
 from lawapp.settings import MEDIA_URL, MEDIA_ROOT
+from passlib.hash import pbkdf2_sha256
 
 class Team(m.Model):
 	"""
@@ -66,6 +67,23 @@ class Member(m.Model):
 			if filename == str(self.pk):
 				os.remove(MEDIA_ROOT + "/member/photos/" + i)
 		super(Member, self).delete()
+
+	def check_password(self,txt):
+		"""
+			Check if the password is correct
+		"""
+		return pbkdf2_sha256.verify(txt,self.password)
+	
+	def encrypt(self,txt):
+		"""
+			Encrypt the password
+		"""
+		return pbkdf2_sha256.encrypt(txt,rounds=12000,salt_size=32)
+
+	def connect(self,request):
+		request.session['member'] = self.id
+		request.session.set_expiry(10) # REMPLACER PAR CONFIG
+
 
 
 class Job(m.Model):

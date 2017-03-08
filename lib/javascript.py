@@ -20,3 +20,11 @@ class libJava:
 			};"""
 		s = '<script type="text/javascript">' + s + '</script>' 
 		return s
+
+	def redirect(self,url,time_in_s):
+		s = '<script type="text/javascript">'
+		s += 'setTimeout(function() {'
+		s += 'window.location.href = "' + url + '";'
+		s += '}, ' + time_in_s + ');'
+		s += '</script>'
+		return s

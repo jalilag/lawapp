@@ -39,7 +39,6 @@ a[role="button"] {
 }
 legend {
 	margin-bottom: 0;
-	padding-bottom: 0;
 }
 .fieldset {
 	font-size:1.2em;
@@ -51,7 +50,15 @@ legend {
 .tab_form {
 	width:100%;
 }
+.stdlab {
+	text-align:left;
+	width:26%;	
+}
 
+.stdfield {
+	text-align:left;
+	width:74%;	
+}
 .tdlab {
 	text-align:left;
 	width:13%;
@@ -65,5 +72,4 @@ legend {
 }
 .tab_button {
 	width:100%;
-
 }

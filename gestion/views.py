@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect,reverse,get_object_or_404
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.views.generic import ListView
-from .forms import form_member_create, form_member_edit, form_job_create, form_team_create
+from .forms import form_member_create, form_member_edit, form_job_create, form_team_create, form_login
 from lib.form import lib_get_field_from_form
 from lib.html import libHtml
 from lib.list import build_list_html
@@ -11,8 +11,9 @@ from lib.javascript import libJava
 from .models import Member,Job, Team
 from lawapp.settings import MEDIA_URL
 from passlib.hash import pbkdf2_sha256
+from .decorators import registered_user
 
-
+@registered_user
 def member_create(request):
 	"""
 		Vue d'édition et de création des membres
@@ -54,7 +55,7 @@ def member_create(request):
 		# Génération de la page en cas de réussite
 	return render(request, 'gestion/template/form.html', locals())
 
-
+@registered_user
 def member_edit(request,member_id):
 	obj = get_object_or_404(Member,pk=member_id)
 	if request.method == 'POST':
@@ -225,6 +226,46 @@ def group_list(request,group_id,resperpage='10',bloc='1', orderby='id'):
 	content = l2.container(content,'div','col-md-8 col-md-offset-2')
 	return render(request, 'gestion/template/form.html', locals())
 
+
+def member_login(request):
+	s = libHtml()
+	form = form_login(request.POST or None)
+	l = lib_get_field_from_form(form,Member)
+	l1= [
+	[[l["login"]["label"],'class="stdlab"'],[l["login"]["field"],'class="stdfield"']],
+	[[l["password"]["label"]],[l["password"]["field"]]]
+	]
+	content = s.tableau(l1,'tab_form')
+	content += s.submit_button("Envoyé")
+	content = s.form_cadre(request,'member_login',content)
+	if request.method == 'POST':
+		if form.is_valid():
+			Member.objects.get(login=form.cleaned_data['login']).connect(request)
+			try: 
+				url = request.session['current_url']
+				del request.session['current_url']
+				print(url)
+				return redirect(url)
+			except:
+				return redirect('member_list') 
+		else:
+			content = l["errors"] + content
+	content = s.p("Vous devez être connecté pour acceder à cette page !")  + s.p("Veuillez vous connecter ...") + content
+	content = s.section('Connection',content,'stdsection')
+	content = s.container(content,'div','col-md-4 col-md-offset-4')
+	return render(request, 'gestion/template/form.html', locals())
+
+
+def member_logout(request):
+	s = libHtml()
+	j=libJava()
+	request.session.flush()
+	content = s.p("Votre session s'est bien terminée. A bientot !")
+	content = s.section('Connection',content,'stdsection')
+	content = s.container(content,'div','col-md-4 col-md-offset-4')
+	content += j.redirect('member_list',"5000")
+	return render(request, 'gestion/template/form.html', locals())
+
 def search(request):
 	s = libHtml()
 	j = libJava()
@@ -242,7 +283,6 @@ def ajax_member_list_delete(request):
 	for i in res2:
 		o = get_object_or_404(Member, pk=int(i))
 		val += '\t- ' + o.firstname + " " + o.lastname + '\n'
-	print(val)
 	data = {'val':val} 
 	return JsonResponse(data)
 
@@ -280,9 +320,8 @@ def ajax_member_connect(request):
 		o = Member.objects.get(login=login)
 	except:
 		o = None
-	if o is not None and pbkdf2_sha256.verify(password,o.password):
-		request.session['member'] = o.id
-		request.session.set_expiry(300) # REMPLACER PAR CONFIG
+	if o is not None and o.check_password(password):
+		o.connect(request)
 		l = manage_quick_connect(o)
 		data = {'val': l}
 	else:
@@ -293,7 +332,9 @@ def manage_quick_connect(obj=None):
 	s = libHtml()
 	if obj is not None:
 		l = s.photo_display(MEDIA_URL + str(obj.photo),None,"64") + " " + str(obj)
-		l = s.lien(l,reverse('member_view',args=[obj.id]))
+		l = s.p(s.lien(l,reverse('member_view',args=[obj.id])))
+
+		l += s.p(s.button("Deconnection",reverse('member_logout'),'danger left'))
 	else:
 		l= [
 		[[s.input("text",None,"Login","c_login")],[s.button("Ok",balise='button',classname='info',params='onClick="quick_connect()"'),'rowspan="2"']],
@@ -301,3 +342,7 @@ def manage_quick_connect(obj=None):
 		]
 		l = s.container(s.tableau(l,head=False,idkey="c_connection_table"),'div',None,"c_connection")
 	return l
+
+
+
+
