@@ -15,3 +15,11 @@ def registered_user(function):
 		return function(request,*args, **kwargs)
 	return decorator
 
+def redirect_on_connect(function):
+	def decorator(request,*args, **kwargs):
+		try:
+			o = request.session['member']
+			redirect('member_list')
+		except:
+			return function(request,*args, **kwargs)
+	return decorator

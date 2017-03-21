@@ -52,3 +52,17 @@ table tr {
 	vertical-align: middle;
 	margin-left: 1em;
 }
+#c_connection_error {
+	color:#fff;
+	font-size:0.7em;
+	text-align:left;
+}
+.c_connected td {
+	margin:1em;
+	padding-left: 0.5em;
+	text-align: left; 
+}
+
+.c_connected_job {
+	color:#e3e3e3;
+}

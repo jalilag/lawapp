@@ -24,5 +24,6 @@ urlpatterns = [
 #    url(r'^$', list_links),
 #    url(r'^blog/',include('blog.urls')),
     url(r'^gestion/',include('gestion.urls')),
+    url(r'^menu/',include('menu.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

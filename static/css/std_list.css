@@ -5,13 +5,13 @@
 .class_list tr td {
 	border: 1px solid #000;
 	padding: 0.2em; 
+	text-align: center;
+	font-weight: bold;
+	font-size: 0.9em;
 }
 .class_list thead tr {
 	background-color: black;
 	font-weight: bold;
-}
-.class_list tr td {
-	text-align: center;
 }
 .class_list td[onclick] {
 	cursor: pointer;

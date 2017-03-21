@@ -25,7 +25,7 @@ SECRET_KEY = 'qb1(@)3+5v^%88ls37jlho$vc4q6z(ws-8hcie4dmb84ortd+9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['testserver','127.0.0.1']
 
 
 # Application definition
@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'gestion',
     'dossier',
+    'menu',
+    'configuration'
 ]
 
 MIDDLEWARE = [
@@ -51,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+SESSION_SAVE_EVERY_REQUEST = True
 
 ROOT_URLCONF = 'lawapp.urls'
 
@@ -105,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+HOME_URL = '/gestion/member_list'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/

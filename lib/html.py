@@ -37,12 +37,12 @@ class libHtml:
 		s +='>' + content + '</div>'
 		return s
 
-	def container(self, content, cont_type='div',classe=None, idtxt = None):
+	def container(self, content, cont_type='div',classname=None, idkey = None):
 		s = '<' + cont_type + ' '
-		if idtxt is not None:
-			s += 'id="' + idtxt +'"'
-		if classe is not None:
-			s += 'class="' + classe + '"'
+		if idkey is not None:
+			s += 'id="' + idkey +'"'
+		if classname is not None:
+			s += 'class="' + classname + '"'
 		s +='>' + content + '</' + cont_type + '>'
 		return s
 
@@ -187,7 +187,8 @@ class libHtml:
 
 
 	def submit_button(self,titre="Submit"):
-		return '<input type="submit" value="' + titre + '" />'
+		return self.button(titre,balise='button',classname='info button_submit',params='type="submit"')
+		# return '<input type="submit" value="' + titre + '" />'
 
 	def photo_display(self,img_path,img_title=None,width="150",height="auto"):
 		if img_title is None:
@@ -209,7 +210,6 @@ class libHtml:
 		if params is not None:
 			s += params
 		s+= '>'
-
 		if glyph is not None:
 			s += '<span class="glyphicon glyphicon-' + glyph + '" aria-hidden="true"</span>'
 		if title is not None:
@@ -237,5 +237,8 @@ class libHtml:
 			s += 'class="' + class_name +'"'
 		s += '>' + title + '</label>'
 
-	def p(self,content):
-		return '<p>' + content + '</p>'
+	def p(self,content, idkey= None, classname=None):
+		return self.container(content,cont_type='p',idkey=idkey,classname=classname)
+
+	def span(self,content, idkey= None, classname=None):
+		return self.container(content,cont_type='span',idkey=idkey,classname=classname)

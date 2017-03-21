@@ -1,4 +1,5 @@
 from django.db import models as m
+from configuration.models import Config
 import os
 from lawapp.settings import MEDIA_URL, MEDIA_ROOT
 from passlib.hash import pbkdf2_sha256
@@ -74,7 +75,7 @@ class Member(m.Model):
 		"""
 		return pbkdf2_sha256.verify(txt,self.password)
 	
-	def encrypt(self,txt):
+	def encrypt(txt):
 		"""
 			Encrypt the password
 		"""
@@ -82,7 +83,7 @@ class Member(m.Model):
 
 	def connect(self,request):
 		request.session['member'] = self.id
-		request.session.set_expiry(10) # REMPLACER PAR CONFIG
+		request.session.set_expiry(int(Config.objects.get(title="EXPIRY_DURATION").value)) 
 
 
 

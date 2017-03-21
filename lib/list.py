@@ -2,6 +2,7 @@
 	Librairie permettant la gestion et la génération de liste à partir des modeles
 """
 from .html import libHtml
+from .model import get_verbose
 from django.urls import reverse
 from lawapp.settings import MEDIA_URL
 
@@ -134,5 +135,6 @@ def res_per_page(address_name,res_num,argx):
 	else:
 		content =''
 	return content
+
 
 

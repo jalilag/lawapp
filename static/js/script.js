@@ -47,11 +47,15 @@ function quick_connect() {
 	        // async: false,
 	        success: function (data) {
 	        	if (data.val != "none") {
-	        		alert(data.val);
 	        		$("#c_connection_table").remove();
 	        		$("#c_connection").append(data.val);
+	        		if (data.url != "none") {
+	        			alert("ok");
+	        			window.location.href = data.url;
+	        		}
 	        	} else {	        		
-	        		alert("aucun");
+	        		$("#c_connection_error").remove();
+	        		$("#c_connection_table").append(data.error);
 	        	}
 	        }
 		});

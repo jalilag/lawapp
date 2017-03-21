@@ -20,16 +20,13 @@ class form_member_create(f.ModelForm):
 			if login and firstname and lastname:
 				if lastname in password or firstname in password or login in password:
 					self.add_error("password","Le mot de passe ne doit pas contenir le prénom, le nom ou le login")
+			cleaned_data["password"] = Member.encrypt(password)
 		if Member.objects.count()>0:
 			for dat in Member.objects.all():
 				if dat.login == login:
 					self.add_error("login","Ce login existe déja")
 		return cleaned_data
 
-	def clean_password(self):
-		data = self.cleaned_data['password']
-		enc_password = Member.encrypt(data)
-		return enc_password
 
 class form_member_edit(f.ModelForm):
 	class Meta:

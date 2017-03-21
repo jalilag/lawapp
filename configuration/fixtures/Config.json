@@ -1,0 +1,11 @@
+[
+  {
+    "model": "configuration.Config",
+    "pk": 1,
+    "fields": {
+      "title": "EXPIRY_DURATION",
+      "description": "Durée de session",
+      "value": "60"
+    }
+  }
+]

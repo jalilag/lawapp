@@ -38,14 +38,21 @@ a[role="button"] {
 	background-color: #fff;
 }
 legend {
-	margin-bottom: 0;
-}
-.fieldset {
+	margin-bottom: 0.5em;
+	padding-left: 1em;
 	font-size:1.2em;
-	color:red;
-	background-color: #fff;
-	padding: 0.2em 0 0.2em 0.2em;
+	background: linear-gradient(to right,#333A40 0%,#697885 100%);
+	/*background: linear-gradient(to right,#77006c 0%,#f300f5 100%);*/
+	color: #fff;
 	border-radius:0.5em;
+	/*border:2px solid #000;*/
+}
+fieldset table {
+	margin-bottom: 1em;
+	border-left: 0.3em #333A40 solid ;
+}
+fieldset table td{
+	padding-left: 0.5em;
 }
 .tab_form {
 	width:100%;
@@ -72,4 +79,7 @@ legend {
 }
 .tab_button {
 	width:100%;
+}
+.button_submit {
+	margin-top:1em;
 }
