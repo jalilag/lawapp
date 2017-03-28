@@ -162,7 +162,7 @@ class libHtml:
 		return res
 
 
-	def form_cadre(self,request,action,form_content,fileupload = False,arg=None,name=None,option=None):
+	def form_cadre(self,request,action,form_content,fileupload = False,arg=None,name=None,idkey=None,option=None):
 		"""
 			Permet d'encadre un formulaire avec les informations nécéssaire pour la transmission des infos
 			Possibilité d'ajouté un bouton envoyer
@@ -175,6 +175,8 @@ class libHtml:
 		content = '<form action="' + link + '" ' + 'method="post"'
 		if name is not None:
 			content += ' name="' + name +'"'
+		if idkey is not None:
+			content += ' id="' + idkey +'"'
 		if fileupload:
 			content += ' enctype="multipart/form-data"'
 		if option is not None:
@@ -201,12 +203,13 @@ class libHtml:
 		l+= 'style="width:' + width + 'px;height:' + height + 'px;">'
 		return l
 
-	def button(self,title=None,address="#",classname="default",glyph=None,balise='a',params=None):
+	def button(self,title=None,buttype="submit",address="#",classname="default",glyph=None,balise='a',params=None):
 		s = '<' + balise + ' '
 		s += 'class="' + 'btn btn-' + classname + '"'
 		if address is not None:
 			s += 'href="' + address + '" '
 		s += 'role="button" '
+		s += 'type="' + buttype + '" '
 		if params is not None:
 			s += params
 		s+= '>'
@@ -221,13 +224,16 @@ class libHtml:
 	def checkbox(self,name,val="",id=None):
 		return self.input("checkbox",name,val)
 
-	def input(self,type,name=None,val="", idkey=None):
+	def input(self,type,name=None,val="", idkey=None, params=None):
 		s = '<input type="' + type + '" '
 		if idkey is not None:
 			s+= 'id="' + idkey +'" '
 		if name is not None:
 			s += 'name="' + name + '" ' 
+		if params is not None:
+			s += params + ' '
 		s += 'value="' + str(val) + '" '
+
 		s += '/>'
 		return s
 

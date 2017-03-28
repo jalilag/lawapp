@@ -17,6 +17,7 @@ from django.conf.urls import url,include
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
+from . import views
 #from .views import list_links
 
 urlpatterns = [
@@ -25,5 +26,7 @@ urlpatterns = [
 #    url(r'^blog/',include('blog.urls')),
     url(r'^gestion/',include('gestion.urls')),
     url(r'^menu/',include('menu.urls')),
+    url(r'^ajax_list_delete/$',views.ajax_list_delete,name="ajax_list_delete"),
+    url(r'^ajax_list_delete_process/$',views.ajax_list_delete_process,name="ajax_list_delete_process"),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

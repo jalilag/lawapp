@@ -77,7 +77,6 @@ TEMPLATES = [
 ]
 
 
-
 WSGI_APPLICATION = 'lawapp.wsgi.application'
 
 

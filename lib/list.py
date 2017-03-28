@@ -6,7 +6,7 @@ from .model import get_verbose
 from django.urls import reverse
 from lawapp.settings import MEDIA_URL
 
-def build_list(class_name,obj,fields,address_name,argx=[10,1,'id'], cell_link=None, head=True):
+def build_list(class_model,fields,address_name,argx=[10,1,'id'], cell_link=None, head=True):
 	"""
 		Fonction de construction de liste à partir d'un modele
 		res_num selectionne le nombre de résultat, si resnum = 0 on prend tout les resultats
@@ -24,6 +24,9 @@ def build_list(class_name,obj,fields,address_name,argx=[10,1,'id'], cell_link=No
 	mainlist = list()
 	l2 = libHtml()
 	c = 0
+	if orderby not in fields:
+		orderby = fields[0]
+	obj = class_model.objects.order_by(orderby)
 	N = len(obj)
 	if res_num > 0 and (int(N/res_num) < bloc_num-1):
 		bloc_num = int(N/res_num)+1
@@ -37,9 +40,10 @@ def build_list(class_name,obj,fields,address_name,argx=[10,1,'id'], cell_link=No
 			else:
 				arg[Narg-1]= j
 			if j == 'delete':
-				l1 = ['<input id="button_delete" class="btn btn-danger btn-xs del" type="submit" value="X" />']
+				l1 = [l2.button(glyph="trash",classname="danger btn-xs del",buttype="button",balise="button",params='''onclick='check_del("''' + class_model.__name__ + '''","''' + class_model._meta.app_label + '''");\'''')]
+				# l1 = ['<input id="button_delete" class="btn btn-danger btn-xs del" type="submit" value="X" />']
 			else:
-				l1 = [l2.lien(class_name._meta.get_field(j).verbose_name,reverse(address_name,args=arg))]
+				l1 = [l2.lien(class_model._meta.get_field(j).verbose_name,reverse(address_name,args=arg))]
 			slist.append(l1)
 		mainlist.append(slist)
 	for i in obj:
@@ -64,7 +68,7 @@ def build_list(class_name,obj,fields,address_name,argx=[10,1,'id'], cell_link=No
 			mainlist.append(slist)
 	return mainlist
 
-def build_list_html(class_name,obj,fields,listaddress,argx=[10,1,'id'], cell_link=None, head=True):
+def build_list_html(request,class_model,fields,listaddress,argx=[10,1,'id'], cell_link=None, head=True):
 	"""
 		Fonction de mise en forme de liste a partir de modeles
 		Affiche une liste avec tri possible
@@ -76,7 +80,7 @@ def build_list_html(class_name,obj,fields,listaddress,argx=[10,1,'id'], cell_lin
 	bloc_num = argx[Narg-2]
 	resperpage = argx[Narg-3]
 	l2 = libHtml()
-	class_bsp = 'col-lg-6 col-lg-offset-3'
+	# class_bsp = 'col-lg-6 col-lg-offset-3'
 	# Boutons nombre de res
 	res = ['5','10','20','50']
 	but = '<table class="but_res"><tr>'
@@ -87,17 +91,20 @@ def build_list_html(class_name,obj,fields,listaddress,argx=[10,1,'id'], cell_lin
 		but += l2.button(i,reverse(listaddress,args=arg))
 		but +='</td>'
 	but += '</tr></table>'
-	# but = l2.container(but,'div','col-lg-6 col-lg-offset-3')
-	# content = l2.container(but,'div','row')
 	# Génération de la liste sous forme de tableau
-	N = class_name.objects.count()
-	l = l2.tableau(build_list(class_name,obj,fields,listaddress,argx,cell_link,head),'class_list')
+	
+	N = class_model.objects.count()
+	l = l2.tableau(build_list(class_model,fields,listaddress,argx,cell_link,head),'class_list')
 	content = but
-	# content += l2.container(l2.container(l,'div',class_bsp),'div','row')
 	content += l
 	# Génération des liens vers les pages
-	# content += l2.container(l2.container(res_per_page(listaddress,orderby,N,resperpage,bloc_num),'div','col-lg-6 col-md-offset-3'),'div','row')
 	content += res_per_page(listaddress,N,argx)
+	if 'delete' in fields:
+		content += l2.input('text',name="delete_address",val=listaddress,params='hidden=true')
+		content += l2.input('text',name="delete_model",val=class_model.__name__,params='hidden=true')
+		content += l2.input('text',name="delete_app",val=class_model._meta.app_label,params='hidden=true')
+		content = l2.form_cadre(request,'ajax_list_delete_process',content,idkey='form_delete',name='form_delete')
+
 	return content
 
 def res_per_page(address_name,res_num,argx):
@@ -137,4 +144,7 @@ def res_per_page(address_name,res_num,argx):
 	return content
 
 
-
+def list_of_one(key):
+	while isinstance(key,list):
+		key = key[0]
+	return key

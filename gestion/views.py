@@ -114,10 +114,7 @@ def member_list(request,resperpage='10', bloc='1', orderby='id' ):
 	fields = ['id','firstname','lastname','job','team','photo','delete']
 	# Génération de la liste
 	l2 = libHtml()
-	obj = Member.objects.order_by(orderby)
-	content = build_list_html(Member,obj,fields,'member_list',[int(resperpage),int(bloc),orderby],'member_view')
-	if 'delete' in fields:
-		content = l2.form_cadre(request,'member_list',content,name='form_delete',option='onsubmit="return check_del();"')
+	content = build_list_html(request,Member,fields,'member_list',[int(resperpage),int(bloc),orderby],'member_view')
 	content = l2.section('Liste des membres',content,'stdsection')
 	content = l2.container(content,'div','col-md-8')
 	return render(request, 'gestion/template/form.html', locals())

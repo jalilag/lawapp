@@ -27,7 +27,6 @@ urlpatterns = [
     url(r'^search$',views.search, name='search'),
     url(r'''^member_login/$''',views.member_login, name='member_login'),
     url(r'^member_logout$',views.member_logout, name='member_logout'),
-    url(r'^ajax_member_list_delete/$',views.ajax_member_list_delete),
     url(r'^ajax_search/$',views.ajax_search),
     url(r'^ajax_member_connect/$',views.ajax_member_connect),
 ]

@@ -1,8 +1,9 @@
-function check_del() {
+function check_del(model_name,app_name) {
 	// Fonction requete json de vérification de suppression
  	var x=document.getElementsByName("delete");
  	var res = '';
  	var j = 0;
+ 	var ans = 1;
 	for (var i = 0; i < x.length; i++) {
 		if(x[i].checked) {
 			if (j > 0 ) {
@@ -14,26 +15,28 @@ function check_del() {
 	}
 	if (j > 0) {
 	   	$.ajax({
-	        url: '/gestion/ajax_member_list_delete/',
-	        data: {'res': res},
+	        url: '/ajax_list_delete/',
+	        data: {'res': res,'model_name':model_name,'app_name':app_name},
 	        dataType: 'json',
-	        async: false,
 	        success: function (data) {
 	        	if (data.val) {
-	    			var rep = confirm("Souhaitez vraiment supprimer les éléments selectionnés ?\n" + data.val);	
-					if (!rep) {
-					 	var x=document.getElementsByName("delete");
-						for (var i = 0; i < x.length; i++) {
-							if(x[i].checked) {
-								x[i].checked = false;
-							} 
-				        }
-				    }
+	        		if (data.val !== 'error') {
+		    			var rep = confirm("Souhaitez vraiment supprimer les éléments selectionnés ?\n" + data.val);	
+						if (!rep) {
+						 	var x=document.getElementsByName("delete");
+							for (var i = 0; i < x.length; i++) {
+								if(x[i].checked) {
+									x[i].checked = false;
+								} 
+					        }
+					    } else {
+					    	$('#form_delete').submit();
+					    }
+					}
 				}
 			}
 	    });
 	}
-	return true;
 }
 
 function quick_connect() {

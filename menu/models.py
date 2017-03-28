@@ -27,6 +27,9 @@ class Right_job(m.Model):
 	job = m.ForeignKey(Job,verbose_name="Fonction")
 	value = m.IntegerField(choices=value_choices,default=1,verbose_name="Droits")
 
+	def __str__(self):
+		return self.value_choices[self.value][1] + " sur " + self.menu.title + " pour " + self.job.title + " "
+
 	def __getattr__(self,nom):
 		if nom == 'job':	
 			l = str(self.job.title)

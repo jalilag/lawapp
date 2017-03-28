@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import Menu, Right_job
 from .forms import form_menu_create, form_right_job
 from lib.form import lib_get_field_from_form
@@ -34,7 +34,7 @@ def menu_create(request,resperpage='10', bloc='1', orderby='menu'):
 	if Menu.objects.count()>0:
 		obj = Menu.objects.order_by(orderby)
 		fields = ['title','parent','url']
-		content += build_list_html(Menu,obj,fields,'menu_create',[int(resperpage),int(bloc),orderby])
+		content += build_list_html(request,Menu,fields,'menu_create',[int(resperpage),int(bloc),orderby])
 
 	content = s.section("Creation de menu",content,'stdsection')
 	content = s.container(content,'div','col-md-4 col-md-offset-2')
@@ -65,13 +65,13 @@ def right_job(request,resperpage='10', bloc='1', orderby='menu'):
 	content = s.tab_with_fieldset(l1,'tab_form') 
 	# content = s.tableau(l1,'tab_form') + s.submit_button("Ok")
 	content = s.form_cadre(request,"right_job",content)
-	fields = ['menu','job','value']
+	fields = ['menu','job','value','delete']
 	if Right_job.objects.count()>0:
-		obj = Right_job.objects.order_by(orderby)
-		content += build_list_html(Right_job,obj,fields,'right_job',[int(resperpage),int(bloc),orderby])
+		content += build_list_html(request,Right_job,fields,'right_job',[int(resperpage),int(bloc),orderby])
 	if request.method == 'POST':
 		if form.is_valid():
 			form.save()
+			return redirect(right_job)
 		else:
 			content = l["errors"] + content
 	content = s.section("Droits associé aux fonctions",content,'stdsection')
