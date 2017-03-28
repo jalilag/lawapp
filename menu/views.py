@@ -4,6 +4,7 @@ from .forms import form_menu_create, form_right_job
 from lib.form import lib_get_field_from_form
 from lib.list import build_list_html
 from lib.html import libHtml
+from lib.model import get_job_type
 
 def menu_create(request,resperpage='10', bloc='1', orderby='menu'):
 	if bloc is None:
@@ -58,12 +59,7 @@ def right_job(request,resperpage='10', bloc='1', orderby='menu'):
 		[[l["menu"]['field']],[l['job']['field']],[l['value']['field']]],
 		[[s.submit_button("Ok")]]		
 	]}}
-	# l1 = [
-	# 	[[l["menu"]['label']],[l['job']['label']],[l['value']['label']]],
-	# 	[[l["menu"]['field']],[l['job']['field']],[l['value']['field']]],		
-	# ]
 	content = s.tab_with_fieldset(l1,'tab_form') 
-	# content = s.tableau(l1,'tab_form') + s.submit_button("Ok")
 	content = s.form_cadre(request,"right_job",content)
 	fields = ['menu','job','value','delete']
 	if Right_job.objects.count()>0:
@@ -79,3 +75,42 @@ def right_job(request,resperpage='10', bloc='1', orderby='menu'):
 	return render(request, 'gestion/template/form.html', locals())
 
 
+def generate_menu(request):
+	job_type = get_job_type(request)
+	print(job_type)
+	if Menu.objects.count() > 0:
+		s ='<ul id="menu-accordeon">'
+		o = Menu.objects.all()
+		r = Right_job.objects.all()
+		for i in o:
+			try:
+				r=Right_job.objects.get(job=job_type,menu=i)
+				r = r.value
+
+			except:
+				r=1
+			if r and job_type:
+				if i.parent is None:
+					s += '<li>'
+					if i.url is not None:
+						s += '<a href="' + i.url + '">'
+					else:
+						s += '<a href="#">' 
+					s += i.title + '</a>'
+					print(o.filter(parent=i.id).count())
+				if o.filter(parent=i.id).count() > 0: 
+					s += '<ul>'
+					oo = o.filter(parent=i.id)
+					for j in oo:
+						s += '<li>'
+						if j.url is not None:
+							s += '<a href="' + j.url + '">'
+						else:
+							s += '<a href="#">' 
+						s += j.title + '</a></li>'
+					s += '</ul>'
+				s += '</li>'
+		s += '</ul>'
+	else:
+		s = '<p>No menu</p>'
+	return s

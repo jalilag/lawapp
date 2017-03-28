@@ -18,6 +18,11 @@ class Member(m.Model):
 	"""
 		Classe répertoriant les membres du cabinet
 	"""
+	job_choices = (
+		(1,'Assistant'),
+		(2,'Avocat'),
+	)
+ 
 	def get_image_path(self,filename):
 		fileformat = os.path.splitext(filename)[1]
 		filename = os.path.splitext(filename)[0]
@@ -40,6 +45,7 @@ class Member(m.Model):
 	photo = m.ImageField(upload_to=get_image_path,verbose_name="Photo")
 	job = m.ForeignKey('Job',verbose_name="Fonction")
 	team = m.ManyToManyField(Team,verbose_name="Equipe")
+
 
 	def __str__(self):
 		return self.firstname + " " + self.lastname + " (" + self.job.title + ")"

@@ -1,14 +1,15 @@
 from django.conf import settings 
 from lib.html import libHtml
-from lib.model import generate_menu
 from gestion.views import manage_quick_connect
+from menu.views import generate_menu
 from gestion.models import Member
+
 def gen_var(request):
 	gens = {}
 	gens['BASE_DIR'] = settings.BASE_DIR
 	gens['CHARSET'] = 'UTF-8'
 	gens['LANG_CODE'] = settings.LANGUAGE_CODE
-	gens['MENU'] = 	generate_menu()
+	gens['MENU'] = generate_menu(request)
 	return gens
 
 def quick_connect(request):

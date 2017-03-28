@@ -47,14 +47,12 @@ function quick_connect() {
 	        url: '/gestion/ajax_member_connect/',
 	        data: {'login': login, 'password': password},
 	        dataType: 'json',
-	        // async: false,
 	        success: function (data) {
-	        	if (data.val != "none") {
-	        		$("#c_connection_table").remove();
-	        		$("#c_connection").append(data.val);
+	        	if (!data.error) {
 	        		if (data.url != "none") {
-	        			alert("ok");
 	        			window.location.href = data.url;
+	        		} else {
+		        		window.location.reload();
 	        		}
 	        	} else {	        		
 	        		$("#c_connection_error").remove();

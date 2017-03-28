@@ -18,10 +18,12 @@ class Menu(m.Model):
 		return l
 
 
+
+
 class Right_job(m.Model):
 	value_choices = (
-			(1,'Accès autorisé'),
-			(2,'Accès interdit'),
+			(0,'Accès autorisé'),
+			(1,'Accès interdit'),
 	)
 	menu = m.ForeignKey(Menu,verbose_name="Menu")
 	job = m.ForeignKey(Job,verbose_name="Fonction")

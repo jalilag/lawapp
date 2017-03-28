@@ -316,18 +316,17 @@ def ajax_member_connect(request):
 		o = None
 	if o is not None and o.check_password(password):
 		o.connect(request)
-		l = manage_quick_connect(o)
-		data = {'val': l, 'url':'none'}
-		for i in str(request.META['HTTP_REFERER']).split("/"):		
+		data = {'url':'none'}
+		for i in str(request.META['HTTP_REFERER']).split("/"):
 			if i == 'member_login':
 				try:
 					url = request.session['current_url']
 					del request.session['current_url']
 				except:
 					url = HOME_URL
-				data = {'val': l, 'url':url}
+				data = {'url':url}
 	else:
-		data = {'val' : "none","error" : s.p("Login et/ou mot de passe inconnu",idkey="c_connection_error")}
+		data = {"error" : s.p("Login et/ou mot de passe inconnu",idkey="c_connection_error")}
 		
 	return JsonResponse(data)	
 
@@ -341,7 +340,7 @@ def manage_quick_connect(obj=None):
 		]
 		l = s.tableau(l,head=False)
 		l2 = [
-		[[l],[s.button(None,reverse('member_logout'),'danger left',glyph="off")]]
+		[[l],[s.button(None,address=reverse('member_logout'),classname='danger left',glyph="off")]]
 		]
 
 		l = s.tableau(l2,head=False,table_class="c_connected")

@@ -17,7 +17,6 @@ from lawapp.settings import HOME_URL
 # 	return render(request,"base.html",locals())
 
 def ajax_list_delete_process(request):
-	print("ok ca marche")
 	if request.method == "POST" and 'delete' in request.POST:
 		l = dict(request.POST)
 		adresslist = list_of_one(l['delete_address'])
