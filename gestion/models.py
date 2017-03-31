@@ -28,11 +28,14 @@ class Member(m.Model):
 		filename = os.path.splitext(filename)[0]
 		if not self.pk:
 			if Member.objects.count() > 0:
-				filename = str(Member.objects.order_by("-id")[0].id +1)
+				filename = str(Member.objects.latest("id").id+1)
+				print("filename",filename)
 			else:
 				filename = "1"
 		else:
 			filename = str(self.id)
+		filename += "temp"
+		print(filename)
 			# Ajouter suppression du fichier deja existant
 		if os.path.isfile(MEDIA_ROOT + '/member/photos/'+ filename + fileformat):
 			os.remove(MEDIA_ROOT + '/member/photos/'+ filename + fileformat)

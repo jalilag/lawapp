@@ -17,17 +17,15 @@ class Menu(m.Model):
 		l = super(Menu,self).__getattribute__(nom)		
 		return l
 
-
-
-
 class Right_job(m.Model):
 	value_choices = (
-			(0,'Accès autorisé'),
-			(1,'Accès interdit'),
+			(0,'Accès interdit'),
+			(1,'Accès autorisé'),
 	)
 	menu = m.ForeignKey(Menu,verbose_name="Menu")
 	job = m.ForeignKey(Job,verbose_name="Fonction")
-	value = m.IntegerField(choices=value_choices,default=1,verbose_name="Droits")
+	value = m.IntegerField(choices=value_choices,default=0,verbose_name="Droits")
+
 
 	def __str__(self):
 		return self.value_choices[self.value][1] + " sur " + self.menu.title + " pour " + self.job.title + " "

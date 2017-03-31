@@ -20,19 +20,17 @@ function check_del(model_name,app_name) {
 	        dataType: 'json',
 	        success: function (data) {
 	        	if (data.val) {
-	        		if (data.val !== 'error') {
-		    			var rep = confirm("Souhaitez vraiment supprimer les éléments selectionnés ?\n" + data.val);	
-						if (!rep) {
-						 	var x=document.getElementsByName("delete");
-							for (var i = 0; i < x.length; i++) {
-								if(x[i].checked) {
-									x[i].checked = false;
-								} 
-					        }
-					    } else {
-					    	$('#form_delete').submit();
-					    }
-					}
+	    			var rep = confirm("Souhaitez vraiment supprimer les éléments selectionnés ?\n" + data.val);	
+					if (!rep) {
+					 	var x=document.getElementsByName("delete");
+						for (var i = 0; i < x.length; i++) {
+							if(x[i].checked) {
+								x[i].checked = false;
+							} 
+				        }
+				    } else {
+				    	$('#form_delete').submit();
+				    }
 				}
 			}
 	    });

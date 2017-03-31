@@ -132,7 +132,7 @@ def member_view(request,id_num):
 			s += ', '
 
 	tab = [
-	[[l2.button(' Edit',reverse('member_edit',args=[id_num]),'info','wrench'),'class="left"']],
+	[[l2.button('Edit',address=reverse('member_edit',args=[id_num]),classname='info',glyph='wrench'),'class="left"']],
 	[[get_verbose(o,'firstname') + " : ",'class="bbigField"'],[o.firstname,'class="bigField"']],
 	[[get_verbose(o,'lastname') + " : ",'class="bbigField"'],[o.lastname,'class="bigField"']],
 	[[get_verbose(o,'job') + " : ",'class="bbigField"'],[l2.lien(str(o.job),reverse('job_list',args=[o.job.pk])),'class="bigField"']],
@@ -201,7 +201,7 @@ def job_list(request,job_id,resperpage='10',bloc='1', orderby='id' ):
 	fields = ['firstname','lastname','team']
 	go = get_object_or_404(Job,pk=int(job_id))
 	o = Member.objects.filter(job=job_id).order_by(orderby)
-	content = build_list_html(Member,o,fields,'job_list',[job_id,int(resperpage),int(bloc),orderby],'member_view')
+	content = build_list_html(request,Member,fields,'job_list',[job_id,int(resperpage),int(bloc),orderby],'member_view')
 	content = l2.section(go.title,content,'stdsection')
 	content = l2.container(content,'div','col-md-8')
 	return render(request, 'gestion/template/form.html', locals())
@@ -217,7 +217,7 @@ def group_list(request,group_id,resperpage='10',bloc='1', orderby='id'):
 	fields = ['firstname','lastname','job']
 	o = Member.objects.filter(team=group_id).order_by(orderby)
 	go = get_object_or_404(Team,pk=int(group_id))
-	content = build_list_html(Member,o,fields,'group_list',[group_id,int(resperpage),int(bloc),orderby],'member_view')
+	content = build_list_html(request,Member,fields,'group_list',[group_id,int(resperpage),int(bloc),orderby],'member_view')
 	content = l2.section(go.title,content,'stdsection')
 	content = l2.container(content,'div','col-md-8')
 	return render(request, 'gestion/template/form.html', locals())
@@ -258,7 +258,7 @@ def member_logout(request):
 	content = s.p("Votre session s'est bien terminée. A bientot !")
 	content = s.section('Connection',content,'stdsection')
 	content = s.container(content,'div','col-md-4 col-md-offset-2')
-	content += j.redirect('member_list',"5000")
+	content += j.redirect('member_list',"3000")
 	return render(request, 'gestion/template/form.html', locals())
 
 def search(request):

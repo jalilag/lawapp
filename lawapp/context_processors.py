@@ -9,7 +9,10 @@ def gen_var(request):
 	gens['BASE_DIR'] = settings.BASE_DIR
 	gens['CHARSET'] = 'UTF-8'
 	gens['LANG_CODE'] = settings.LANGUAGE_CODE
-	gens['MENU'] = generate_menu(request)
+	menu = generate_menu(request)
+	if menu is not None:
+		gens['MENU'] = menu
+	 
 	return gens
 
 def quick_connect(request):

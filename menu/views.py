@@ -5,6 +5,7 @@ from lib.form import lib_get_field_from_form
 from lib.list import build_list_html
 from lib.html import libHtml
 from lib.model import get_job_type
+from .tools import get_valid_menu_with_job
 
 def menu_create(request,resperpage='10', bloc='1', orderby='menu'):
 	if bloc is None:
@@ -30,6 +31,7 @@ def menu_create(request,resperpage='10', bloc='1', orderby='menu'):
 	if request.method == 'POST':
 		if form.is_valid():
 			form.save()
+			return redirect(menu_create)
 		else:
 			content = l["errors"] + content
 	if Menu.objects.count()>0:
@@ -61,7 +63,7 @@ def right_job(request,resperpage='10', bloc='1', orderby='menu'):
 	]}}
 	content = s.tab_with_fieldset(l1,'tab_form') 
 	content = s.form_cadre(request,"right_job",content)
-	fields = ['menu','job','value','delete']
+	fields = ['id','menu','job','value','delete']
 	if Right_job.objects.count()>0:
 		content += build_list_html(request,Right_job,fields,'right_job',[int(resperpage),int(bloc),orderby])
 	if request.method == 'POST':
@@ -75,33 +77,66 @@ def right_job(request,resperpage='10', bloc='1', orderby='menu'):
 	return render(request, 'gestion/template/form.html', locals())
 
 
+# def generate_menu(request):
+# 	job_type = get_job_type(request)
+# 	if Menu.objects.count() > 0:
+# 		s ='<ul id="menu-accordeon">'
+# 		o = Menu.objects.filter(parent=None)
+# 		for i in o:
+# 			try:
+# 				r=Right_job.objects.get(job=job_type,menu=i.pk)
+# 				r = r.value
+# 			except:
+# 				r=1
+# 			if r!= 0 and job_type != 0:
+# 				print("r="+ str(r) + " " + str(i))
+# 				if i.parent is None:
+# 					s += '<li>'
+# 					if i.url is not None:
+# 						s += '<a href="' + i.url + '">'
+# 					else:
+# 						s += '<a href="#">' 
+# 					s += i.title + '</a>'
+# 				if o.filter(parent=i.id).count() > 0: 
+# 					s += '<ul>'
+# 					oo = o.filter(parent=i.id)
+# 					for j in oo:
+# 						try:
+# 							r=Right_job.objects.get(job=job_type,menu=j.pk)
+# 							r = r.value
+# 						except:
+# 							r=1
+# 						if r:
+# 							s += '<li>'
+# 							if j.url is not None:
+# 								s += '<a href="' + j.url + '">'
+# 							else:
+# 								s += '<a href="#">' 
+# 							s += j.title + '</a></li>'
+# 					s += '</ul>'
+# 				s += '</li>'
+# 		s += '</ul>'
+# 	else:
+# 		s = '<p>No menu</p>'
+# 	return s
+
 def generate_menu(request):
 	job_type = get_job_type(request)
-	print(job_type)
-	if Menu.objects.count() > 0:
+	menus = get_valid_menu_with_job(job_type)
+	if menus is not None:
 		s ='<ul id="menu-accordeon">'
-		o = Menu.objects.all()
-		r = Right_job.objects.all()
-		for i in o:
-			try:
-				r=Right_job.objects.get(job=job_type,menu=i)
-				r = r.value
-
-			except:
-				r=1
-			if r and job_type:
-				if i.parent is None:
+		for i in menus:
+			if i.parent == None:
+				submenus = get_valid_menu_with_job(job_type,i.id)
+				if submenus is not None:
 					s += '<li>'
 					if i.url is not None:
 						s += '<a href="' + i.url + '">'
 					else:
 						s += '<a href="#">' 
 					s += i.title + '</a>'
-					print(o.filter(parent=i.id).count())
-				if o.filter(parent=i.id).count() > 0: 
 					s += '<ul>'
-					oo = o.filter(parent=i.id)
-					for j in oo:
+					for j in submenus:
 						s += '<li>'
 						if j.url is not None:
 							s += '<a href="' + j.url + '">'
@@ -112,5 +147,5 @@ def generate_menu(request):
 				s += '</li>'
 		s += '</ul>'
 	else:
-		s = '<p>No menu</p>'
+		return None
 	return s

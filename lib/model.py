@@ -14,4 +14,5 @@ def get_job_type(request):
 	except:
 		print("non")
 		return 0
-	return Member.objects.get(pk=o)
+	m = Member.objects.get(pk=o)
+	return m.job.pk
