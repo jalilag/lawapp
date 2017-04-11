@@ -6,7 +6,7 @@ from .model import get_verbose
 from django.urls import reverse
 from lawapp.settings import MEDIA_URL
 
-def build_list(class_model,fields,address_name,argx=[10,1,'id'], cell_link=None, head=True):
+def build_list(class_model,fields,address_name,argx=[10,1,'id'], cell_link=None, head=True, filterby=None):
 	"""
 		Fonction de construction de liste à partir d'un modele
 		res_num selectionne le nombre de résultat, si resnum = 0 on prend tout les resultats
@@ -18,8 +18,8 @@ def build_list(class_model,fields,address_name,argx=[10,1,'id'], cell_link=None,
 	Narg = len(argx)
 	orderby = argx[Narg-1]
 	bloc_num = int(argx[Narg-2])
-	res_num = int(argx[Narg-3])	
-	print(orderby,bloc_num,res_num)
+	res_num = int(argx[Narg-3])
+
 	slist = list()
 	mainlist = list()
 	l2 = libHtml()
@@ -27,6 +27,9 @@ def build_list(class_model,fields,address_name,argx=[10,1,'id'], cell_link=None,
 	if orderby not in fields:
 		orderby = fields[0]
 	obj = class_model.objects.order_by(orderby)
+	if filterby is not None:
+		filter_dict = {filterby:argx[0]}
+		obj = obj.filter(**filter_dict)
 	N = len(obj)
 	if res_num > 0 and (int(N/res_num) < bloc_num-1):
 		bloc_num = int(N/res_num)+1
@@ -68,12 +71,13 @@ def build_list(class_model,fields,address_name,argx=[10,1,'id'], cell_link=None,
 			mainlist.append(slist)
 	return mainlist
 
-def build_list_html(request,class_model,fields,listaddress,argx=[10,1,'id'], cell_link=None, head=True):
+def build_list_html(request,class_model,fields,listaddress,argx=[10,1,'id'], cell_link=None, head=True, filterby=None):
 	"""
 		Fonction de mise en forme de liste a partir de modeles
 		Affiche une liste avec tri possible
 		Nombre de res
 		Choix des pages
+		possibilité de suppression et de tri
 	"""
 	Narg = len(argx)
 	orderby = argx[Narg-1]
@@ -94,7 +98,7 @@ def build_list_html(request,class_model,fields,listaddress,argx=[10,1,'id'], cel
 	# Génération de la liste sous forme de tableau
 	
 	N = class_model.objects.count()
-	l = l2.tableau(build_list(class_model,fields,listaddress,argx,cell_link,head),'class_list')
+	l = l2.tableau(build_list(class_model,fields,listaddress,argx,cell_link,head,filterby=filterby),'class_list')
 	content = but
 	content += l
 	# Génération des liens vers les pages

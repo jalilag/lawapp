@@ -1,11 +1,10 @@
 from django.shortcuts import render,redirect
-from .models import Menu, Right_job
-from .forms import form_menu_create, form_right_job
+from .models import Menu, Right_job,Right_member,Right_team
+from .forms import form_menu_create, form_right_job,form_right_member, form_right_team
 from lib.form import lib_get_field_from_form
 from lib.list import build_list_html
 from lib.html import libHtml
-from lib.model import get_job_type
-from .tools import get_valid_menu_with_job
+from .tools import get_valid_menu
 
 def menu_create(request,resperpage='10', bloc='1', orderby='menu'):
 	if bloc is None:
@@ -60,7 +59,8 @@ def right_job(request,resperpage='10', bloc='1', orderby='menu'):
 		[[l["menu"]['label']],[l['job']['label']],[l['value']['label']]],
 		[[l["menu"]['field']],[l['job']['field']],[l['value']['field']]],
 		[[s.submit_button("Ok")]]		
-	]}}
+	]}
+	}
 	content = s.tab_with_fieldset(l1,'tab_form') 
 	content = s.form_cadre(request,"right_job",content)
 	fields = ['id','menu','job','value','delete']
@@ -77,57 +77,72 @@ def right_job(request,resperpage='10', bloc='1', orderby='menu'):
 	return render(request, 'gestion/template/form.html', locals())
 
 
-# def generate_menu(request):
-# 	job_type = get_job_type(request)
-# 	if Menu.objects.count() > 0:
-# 		s ='<ul id="menu-accordeon">'
-# 		o = Menu.objects.filter(parent=None)
-# 		for i in o:
-# 			try:
-# 				r=Right_job.objects.get(job=job_type,menu=i.pk)
-# 				r = r.value
-# 			except:
-# 				r=1
-# 			if r!= 0 and job_type != 0:
-# 				print("r="+ str(r) + " " + str(i))
-# 				if i.parent is None:
-# 					s += '<li>'
-# 					if i.url is not None:
-# 						s += '<a href="' + i.url + '">'
-# 					else:
-# 						s += '<a href="#">' 
-# 					s += i.title + '</a>'
-# 				if o.filter(parent=i.id).count() > 0: 
-# 					s += '<ul>'
-# 					oo = o.filter(parent=i.id)
-# 					for j in oo:
-# 						try:
-# 							r=Right_job.objects.get(job=job_type,menu=j.pk)
-# 							r = r.value
-# 						except:
-# 							r=1
-# 						if r:
-# 							s += '<li>'
-# 							if j.url is not None:
-# 								s += '<a href="' + j.url + '">'
-# 							else:
-# 								s += '<a href="#">' 
-# 							s += j.title + '</a></li>'
-# 					s += '</ul>'
-# 				s += '</li>'
-# 		s += '</ul>'
-# 	else:
-# 		s = '<p>No menu</p>'
-# 	return s
+
+
+def rights(request,resperpage='10', bloc='1', orderby='menu'):
+	s = libHtml()
+	form_team = form_right_team(request.POST or None) # Signifie que si le formulaire est retourné invalide il est rechargé avec les erreurs
+	form_member = form_right_member(request.POST or None) # Signifie que si le formulaire est retourné invalide il est rechargé avec les erreurs
+
+	l = lib_get_field_from_form(form_member,Right_member)
+	l1 = {1: {"Restriction d'accès pour les membres":
+	[
+		[[l["menu"]['label']],[l['member']['label']]],
+		[[l["menu"]['field']],[l['member']['field']]],
+		[[s.submit_button("Ok")]]		
+	]}}
+
+	ll = lib_get_field_from_form(form_team,Right_team)
+	l2 = {1: {"Restriction d'accès pour les équipes":
+	[
+		[[ll["menu"]['label']],[ll['team']['label']]],
+		[[ll["menu"]['field']],[ll['team']['field']]],
+		[[s.submit_button("Ok")]]	
+	]}}
+
+	content1 = s.tab_with_fieldset(l1,'tab_form')
+	content1 += s.input(type="hidden",name="f_name",val="member")
+	content1 = s.form_cadre(request,"rights",content1,idkey="form_member")
+	content2 = s.tab_with_fieldset(l2,'tab_form') 
+	content2 += s.input(type="hidden",name="f_name",val="team")
+	content2 = s.form_cadre(request,"rights",content2,idkey="form_team")
+
+	if Right_member.objects.count()>0:
+		fields = ['menu','member','delete']
+		content1 += build_list_html(request,Right_member,fields,'rights')
+
+	if Right_team.objects.count()>0:
+		fields = ['menu','team','delete']
+		content2 += build_list_html(request,Right_team,fields,'rights')
+	if request.method == 'POST':
+		if request.POST["f_name"] == "member":
+			if form_member.is_valid():
+				form_member.save()
+				return redirect(rights)		
+			else:
+				content1 = l["errors"] + content1
+		elif request.POST["f_name"] == "team":
+			if form_team.is_valid():
+				form_team.save()
+				return redirect(rights)		
+			else:
+				content2 = ll["errors"] + content2
+
+	content1 = s.section("Gestion des droits des membres",content1,'stdsection')
+	content2 = s.section("Gestion des droits des équipes",content2,'stdsection')
+	content1 = s.container(content1,'div','col-md-4')
+	content2 = s.container(content2,'div','col-md-4')
+	content = content1+content2
+	return render(request, 'gestion/template/form.html', locals())
+
 
 def generate_menu(request):
-	job_type = get_job_type(request)
-	menus = get_valid_menu_with_job(job_type)
+	menus = get_valid_menu(request)
 	if menus is not None:
 		s ='<ul id="menu-accordeon">'
 		for i in menus:
 			if i.parent == None:
-				submenus = get_valid_menu_with_job(job_type,i.id)
+				submenus = get_valid_menu(request,i.id)
 				if submenus is not None:
 					s += '<li>'
 					if i.url is not None:

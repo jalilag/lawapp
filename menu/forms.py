@@ -1,6 +1,6 @@
 from django import forms as f
 from django.test import Client
-from .models import Menu, Right_job
+from .models import Menu, Right_job,Right_member,Right_team
 from django.urls import resolve,Resolver404
 from lawapp.settings import BASE_DIR
 
@@ -47,4 +47,37 @@ class form_right_job(f.ModelForm):
 			for i in obj:
 				if i.menu == menu and i.job == job:
 					raise f.ValidationError("Ce couple menu/fonction a déja des droits.")
+		return cleaned_data
+
+class form_right_member(f.ModelForm):
+	class Meta:
+		model = Right_member
+		fields = ('menu','member')
+
+	def clean(self):
+		cleaned_data = super(form_right_member, self).clean()
+		menu = cleaned_data.get('menu')
+		member = cleaned_data.get('member')
+		if menu and member and Right_member.objects.count()>0:
+			obj = Right_member.objects.all()
+			for i in obj:
+				if i.menu == menu and i.member == member:
+					raise f.ValidationError("L'accès à ce menu est déja restreint pour ce membre.")
+		return cleaned_data
+
+
+class form_right_team(f.ModelForm):
+	class Meta:
+		model = Right_team
+		fields = ('menu','team')
+
+	def clean(self):
+		cleaned_data = super(form_right_team, self).clean()
+		menu = cleaned_data.get('menu')
+		team = cleaned_data.get('member')
+		if menu and team and Right_team.objects.count()>0:
+			obj = Right_member.objects.all()
+			for i in obj:
+				if i.menu == menu and i.team == team:
+					raise f.ValidationError("L'accès à ce menu est déja restreint pour cette équipe.")
 		return cleaned_data

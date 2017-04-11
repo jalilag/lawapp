@@ -6,11 +6,11 @@ import os
 
 @receiver(post_save, sender=Member)
 def model_post_save(sender, **kwargs):
-	l = kwargs['instance'].__dict__
-	fileformat = os.path.splitext(l['photo'])[1]
-	filename = str(l["id"]) + fileformat
-	print(filename,l['photo'])
-	Member.objects.filter(pk=l['id']).update(photo="member/photos/"+filename)
-	if os.path.isfile(MEDIA_ROOT + '/' + l['photo']):
-		os.rename(MEDIA_ROOT + '/' + l['photo'],MEDIA_ROOT + '/member/photos/' + filename)
-		print("renomage ok")
+	if "created" in kwargs:
+		if kwargs["created"]:
+			l = kwargs['instance'].__dict__	
+			fileformat = os.path.splitext(l['photo'])[1]
+			filename = str(l["id"]) + fileformat
+			Member.objects.filter(pk=l['id']).update(photo="member/photos/"+filename)
+			if os.path.isfile(MEDIA_ROOT + '/' + l['photo']):
+				os.rename(MEDIA_ROOT + '/' + l['photo'],MEDIA_ROOT + '/member/photos/' + filename)

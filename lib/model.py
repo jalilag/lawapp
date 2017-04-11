@@ -8,11 +8,15 @@ def get_verbose(obj,field_title):
 		else:
 			return 'Pas de verbose trouvé pour' + field_title + ' avec l\'objet ' + str(obj)
 
-def get_job_type(request):
-	try:
-		o = request.session['member']
-	except:
-		print("non")
-		return 0
-	m = Member.objects.get(pk=o)
-	return m.job.pk
+
+def get_field_by_string(instance, field):
+	field_path = field.split('.')
+	attr = instance
+	for elem in field_path:
+		try:
+			attr = getattr(attr, elem)
+		except AttributeError:
+			attr = None
+	if callable(attr):
+		return '%s' % attr
+	return attr

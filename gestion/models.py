@@ -70,6 +70,15 @@ class Member(m.Model):
 			l = super(Member,self).__getattribute__(nom)		
 		return l
 
+	def get_team_id(self):
+		N = len(self.team.all())
+		if N > 0:
+			l = list()
+			for i in range(0,N):
+				l.append(self.team.all()[i].pk)
+			return l
+		return None
+
 	def delete(self):
 		l = os.listdir(MEDIA_ROOT + "/member/photos")
 		for i in l:

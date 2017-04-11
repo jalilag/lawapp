@@ -41,3 +41,37 @@ class Right_job(m.Model):
 		else:
 			l = super(Right_job,self).__getattribute__(nom)		
 		return l
+
+class Right_member(m.Model):
+	menu = m.ForeignKey(Menu,verbose_name="Menu")
+	member = m.ForeignKey(Member,verbose_name="Membre")
+	# value = m.IntegerField(choices=value_choices,default=0,verbose_name="Droits")
+
+	def __str__(self):
+		return str(self.menu) + " : Accès restreint pour " + str(self.member)
+
+	def __getattr__(self,nom):
+		if nom == 'member':	
+			l = str(self.member)
+		elif nom == 'menu':
+			l = str(self.menu.title)
+		else:
+			l = super().__getattribute__(nom)		
+		return l
+
+class Right_team(m.Model):
+	menu = m.ForeignKey(Menu,verbose_name="Menu")
+	team = m.ForeignKey(Team,verbose_name="Equipe")
+	# value = m.IntegerField(choices=value_choices,default=0,verbose_name="Droits")
+
+	def __str__(self):
+		return str(self.menu) + " : Accès restreint pour " + str(self.team)
+
+	def __getattr__(self,nom):
+		if nom == 'team':	
+			l = str(self.team.title)
+		elif nom == 'menu':
+			l = str(self.menu.title)
+		else:
+			l = super().__getattribute__(nom)		
+		return l

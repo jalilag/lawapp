@@ -200,8 +200,7 @@ def job_list(request,job_id,resperpage='10',bloc='1', orderby='id' ):
 	l2 = libHtml()
 	fields = ['firstname','lastname','team']
 	go = get_object_or_404(Job,pk=int(job_id))
-	o = Member.objects.filter(job=job_id).order_by(orderby)
-	content = build_list_html(request,Member,fields,'job_list',[job_id,int(resperpage),int(bloc),orderby],'member_view')
+	content = build_list_html(request,Member,fields,'job_list',[job_id,int(resperpage),int(bloc),orderby],'member_view',filterby="job")
 	content = l2.section(go.title,content,'stdsection')
 	content = l2.container(content,'div','col-md-8')
 	return render(request, 'gestion/template/form.html', locals())
@@ -215,9 +214,8 @@ def group_list(request,group_id,resperpage='10',bloc='1', orderby='id'):
 		resperpage = 10
 	l2 = libHtml()
 	fields = ['firstname','lastname','job']
-	o = Member.objects.filter(team=group_id).order_by(orderby)
 	go = get_object_or_404(Team,pk=int(group_id))
-	content = build_list_html(request,Member,fields,'group_list',[group_id,int(resperpage),int(bloc),orderby],'member_view')
+	content = build_list_html(request,Member,fields,'group_list',[group_id,int(resperpage),int(bloc),orderby],'member_view',filterby="team")
 	content = l2.section(go.title,content,'stdsection')
 	content = l2.container(content,'div','col-md-8')
 	return render(request, 'gestion/template/form.html', locals())

@@ -9,4 +9,8 @@ urlpatterns = [
     				r'''(?:\/(?P<bloc>[^/]+))?'''
                     r'''(?:\/(?P<orderby>[^/]+))?'''
                     ,views.right_job, name='right_job'),
+    url(r'''^rights(?:\/(?P<resperpage>[^/]+))?'''
+                    r'''(?:\/(?P<bloc>[^/]+))?'''
+                    r'''(?:\/(?P<orderby>[^/]+))?'''
+                    ,views.rights, name='rights'),
 ]
