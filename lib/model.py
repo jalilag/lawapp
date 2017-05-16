@@ -1,4 +1,3 @@
-from gestion.models import Member
 def get_verbose(obj,field_title):
 	try:
 		return obj._meta.get_field(field_title).verbose_name

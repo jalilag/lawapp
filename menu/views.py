@@ -35,7 +35,7 @@ def menu_create(request,resperpage='10', bloc='1', orderby='menu'):
 			content = l["errors"] + content
 	if Menu.objects.count()>0:
 		obj = Menu.objects.order_by(orderby)
-		fields = ['title','parent','url']
+		fields = ['title','parent','url','delete']
 		content += build_list_html(request,Menu,fields,'menu_create',[int(resperpage),int(bloc),orderby])
 
 	content = s.section("Creation de menu",content,'stdsection')
@@ -128,8 +128,8 @@ def rights(request,resperpage='10', bloc='1', orderby='menu'):
 			else:
 				content2 = ll["errors"] + content2
 
-	content1 = s.section("Gestion des droits des membres",content1,'stdsection')
-	content2 = s.section("Gestion des droits des équipes",content2,'stdsection')
+	content1 = s.section("Membres",content1,'stdsection')
+	content2 = s.section("Equipes",content2,'stdsection')
 	content1 = s.container(content1,'div','col-md-4')
 	content2 = s.container(content2,'div','col-md-4')
 	content = content1+content2

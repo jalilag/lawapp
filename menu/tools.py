@@ -24,13 +24,15 @@ def check_access_with_job(job_id,menu_id):
 
 def check_access_with_team(team_id,menu_id):
 	r = 1
-	if isinstance(team_id,list):
+	if team_id is None:
+		r = 0
+	elif isinstance(team_id,list):
 		for i in team_id:
 			if Right_team.objects.filter(team=i,menu=menu_id).count() == 1:
-				r *=  int(Right_team.objects.get(team=i,menu=menu_id).value)
+				r =  0
 	else:
 		if Right_team.objects.filter(team=team_id,menu=menu_id).count() == 1:
-			r *=  int(Right_team.objects.get(team=team_id,menu=menu_id).value)
+			r =  0
 	return r
 
 def check_access_with_member(member_id,menu_id):
@@ -39,16 +41,13 @@ def check_access_with_member(member_id,menu_id):
 		r = 0
 	else:
 		if Right_member.objects.filter(member=member_id,menu=menu_id).count() == 1:
-			r *= int(Right_member.objects.get(member=member_id,menu=menu_id).value)
+			r = 0
 	return r
 
 def check_access(request,menu_id):
-	member_id = get_user_info(request,"id")
-	job_id = get_user_info(request,"job.id")
-	team_id = get_user_info(request,"team.id")
-	r_id = check_access_with_member(member_id,menu_id)
-	r_job = check_access_with_job(job_id,menu_id)
-	r_team = check_access_with_team(team_id,menu_id)
+	r_id = check_access_with_member(get_user_info(request,"id"),menu_id)
+	r_job = check_access_with_job(get_user_info(request,"job.id"),menu_id)
+	r_team = check_access_with_team(get_user_info(request,"team.id"),menu_id)
 	if r_job and r_id and r_team:
 			return True
 	return False

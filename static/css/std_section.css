@@ -13,7 +13,7 @@
 	font-size:1.5em;
 	padding: 0.3em 0 0.2em 0;
 }
-.stdsection div {
+.stdsection > div {
 	margin-top:0;
 	/*border: 1px solid;*/
 	padding: 1em;

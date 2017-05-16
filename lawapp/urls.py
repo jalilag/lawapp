@@ -26,6 +26,7 @@ urlpatterns = [
 #    url(r'^blog/',include('blog.urls')),
     url(r'^gestion/',include('gestion.urls')),
     url(r'^menu/',include('menu.urls')),
+    url(r'^home/',include('home.urls')),
     url(r'^ajax_list_delete/$',views.ajax_list_delete,name="ajax_list_delete"),
     url(r'^ajax_list_delete_process/$',views.ajax_list_delete_process,name="ajax_list_delete_process"),
 ]

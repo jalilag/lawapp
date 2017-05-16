@@ -1,0 +1,62 @@
+/* Cibler les éléments <li> appartenant à un élément de classe "icone" */
+.icotest2 {
+	/*text-align: center;*/
+	/*margin-bottom: 5em00101;*/
+	box-sizing: border-box;
+	position:static!important;
+	margin: auto;
+	display: block;
+}
+.icotest2 ul {
+	box-sizing: border-box;
+	display: flex;
+	flex-wrap: wrap;
+	padding: 0;
+	margin: 40px 0 20px;
+	list-style-type: disc;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
+}
+.icotest2 li {
+	display: list-item;
+	text-align: center;
+	list-style: none;
+}
+
+.icotest2 a {
+	text-decoration: none;
+	cursor: pointer;
+	display: inline-block;
+}
+.icotest2 img {
+	border: none;
+
+}
+
+.ico{
+	margin-left:1em;
+	margin-right:1em;
+	display: inline-block;
+	width: 100px;
+	height: 100px;
+	color: #000;
+	text-align: center;
+	vertical-align: bottom;
+}
+
+.ico1 { 
+  background: url("../../media/home/img/s1/dossier_en_cours_1.png") no-repeat top center;
+}
+.ico1:hover { 
+  background: url("../../media/home/img/s1/dossier_en_cours_2.png") no-repeat top center;
+}
+
+.ico2 { 
+  background: url("../../media/home/img/s1/dossier_liste_1.png") no-repeat top center;
+}
+.ico2:hover { 
+  background: url("../../media/home/img/s1/dossier_liste_2.png") no-repeat top center;
+}
